@@ -1,0 +1,132 @@
+<ul id="dropdown1"
+    class="dropdown-content">
+    <li>
+        <a (click)="changeLanguaje('es')">{{'ESPANOL' | translate}}</a>
+    </li>
+    <li>
+        <a (click)="changeLanguaje('en')">{{'INGLES' | translate}}</a>
+    </li>
+</ul>
+<ul id="dropdown2"
+    class="dropdown-content">
+    <li>
+        <a (click)="changeLanguaje('es')">{{'ESPANOL' | translate}}</a>
+    </li>
+    <li>
+        <a (click)="changeLanguaje('en')">{{'INGLES' | translate}}</a>
+    </li>
+</ul>
+<nav [ngClass]="menu1">
+    <div class="nav-wrapper">
+        <a href="#"
+           class="brand-logo color-negro">
+            <b class="green-glBi-claro">GL</b>Reports</a>
+        <ul id="nav-mobile"
+            class="right hide-on-med-and-down">
+            <li>
+                <a class="color-text"
+                   [routerLink]="['/upload']">{{'CARACTERISTICAS' | translate}}</a>
+            </li>
+            <li>
+                <a class="color-text"
+                   [routerLink]="['/graph']">
+                    <span class="back-green-glBI-oscuro nav-recuadro">{{'PRECIOS' | translate}}</span>
+                </a>
+            </li>
+            <li>
+                <a class="color-text "
+                   [routerLink]="['/login']">{{'CONTACTANOS' | translate}}</a>
+            </li>
+            <li>
+                <a class="dropdown-trigger color-text upperCase flex-display"
+                   href="#!"
+                   data-target="dropdown1">
+                    <i class="material-icons green-glBi-claro">language</i>{{language}} </a>
+            </li>
+
+
+        </ul>
+    </div>
+</nav>
+
+<nav [ngClass]="menu2"
+     id="menu2">
+    <div class="nav-wrapper">
+
+        <a href="#"
+           class="brand-logo color-negro">
+            <b class="green-glBi-claro">GL</b>Reports</a>
+        <ul id="nav-mobile"
+            class="right hide-on-med-and-down">
+
+            <li>
+                <a class="dropdown-trigger color-text upperCase flex-display"
+                   href="#!"
+                   data-target="dropdown2">
+                    <i id="language2"
+                       class="material-icons green-glBi-claro">language</i>{{language}} </a>
+            </li>
+
+
+        </ul>
+    </div>
+</nav>
+<router-outlet></router-outlet>
+
+
+<!-- AQUI EMPIEZA EL FOOTER -->
+<footer [ngClass]="menu1"
+        class="page-footer footer-background">
+    <div class="container">
+        <div class="row">
+            <h4 class="center">
+                {{'CONTACTANOS' | translate}}
+            </h4>
+            <form class="col offset-l3 s12 l6">
+                <div class="row">
+                    <div class="input-field col s6">
+                        <input id="nombre"
+                               type="text"
+                               class="validate">
+                        <label for="nombre">{{'NOMBRE-CONT' | translate}}*</label>
+                    </div>
+                    <div class="input-field col s6">
+                        <input id="email"
+                               type="email"
+                               class="validate">
+                        <label for="email">{{'CORREO-CONT' | translate}}*</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input id="icon_prefix2"
+                               class="validate"
+                               type="text">
+                        <label for="icon_prefix2">{{'ASUNTO-CONT' | translate}}*</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <textarea id="textarea1"
+                                  class="materialize-textarea validate"
+                                  data-length="120"></textarea>
+                        <label for="textarea1">{{'MENSAJE-CONT' | translate}}*</label>
+                    </div>
+                </div>
+                <p class="center">
+                    <button class="waves-effect waves-light btn back-green-glBI-oscuro tam-200"
+                            type="submit">{{'ENVIAR-MENSAJE' | translate}}</button>
+                </p>
+            </form>
+        </div>
+    </div>
+    <div class="footer-copyright grey darken-4">
+        <div class="container center-align">
+            {{'CREADO' | translate}}
+            <br /> © 2018 {{'DERECHOS' | translate}}
+
+
+        </div>
+    </div>
+</footer>
+<!-- AQUI TERMINA EL FOOTER -->

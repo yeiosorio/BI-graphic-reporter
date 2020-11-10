@@ -1,0 +1,132 @@
+<mat-accordion>
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Personal data
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <mat-form-field>
+      <input
+        matInput
+        [matDatepicker]="picker"
+        placeholder="Elije fecha inicial"
+        [formControl]="filterDate.init"
+        (dateChange)="dateChange($event, 'init')"
+      />
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+    
+    <!-- DatePicker Date End-->
+    <mat-form-field>
+      <input
+        matInput
+        [matDatepicker]="picker2"
+        placeholder="Elije fecha Final"
+        [formControl]="filterDate.end"
+        (dateChange)="dateChange($event, 'end')"
+      />
+      <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+      <mat-datepicker #picker2></mat-datepicker>
+    </mat-form-field>
+    
+    <section class="example-section">
+      <div *ngFor="let client of clients; let i = index">
+        <mat-checkbox class="example-margin" [(ngModel)]="client.Checked">{{client.clientName}}</mat-checkbox>
+      </div>
+    </section>
+    <button class="btnFilter" mat-raised-button (click)="filterForDate()">
+      Filtrar Graficas
+    </button>
+  </mat-expansion-panel>
+</mat-accordion>
+<div class="column-container">
+  <h5>Análisis de datos</h5>
+  <hr />
+  <!--Total personas evaluadas-->
+  <div>
+    <img src="../../assets/img/infoCDC/Diseño Infografía.svg" />
+    <img src="/client/src/assets/img/infoCDC/Diseño Infografía.svg" />
+    <h6>{{ columns[0][1].name }}</h6>
+    <p>{{ columns[0][1].total[0] }}/{{ columns[0][0].total[0] }}</p>
+  </div>
+
+  <hr />
+  <!--Edad promedio-->
+  <div>
+    <img src="../../assets/img/infoCDC/Diseño Infografía 1.svg" />
+    <img src="/client/src/assets/img/infoCDC/Diseño Infografía 1.svg" />
+    <h6>{{ columns[0][2].name }}</h6>
+    <p>{{ columns[0][2].total[0] }}</p>
+  </div>
+</div>
+
+<div class="column-container">
+  <div class="chartContainer" *ngFor="let item of columns[1]">
+    <h6>{{ item.name }}</h6>
+    <canvas id="{{ item.name }}"></canvas>
+  </div>
+</div>
+
+<div class="column-container">
+  <div class="chartContainer" *ngFor="let item of columns[2]">
+    <h6>{{ item.name }}</h6>
+    <canvas id="{{ item.name }}"></canvas>
+  </div>
+</div>
+
+<div class="column-container">
+  <h6>Resumen de los resultados encontrados</h6>
+  <p>
+    A. Se evaluó el
+    <span style="color:#00d9dd"
+      >{{ (columns[0][1].total[0] * 100) / columns[0][0].total[0] }}%</span
+    >
+    de la población programada en la empresa.
+  </p>
+  <p>
+    B. El
+    <span style="color:#00d9dd"
+      >{{ (columns[0][1].total[0] * 100) / columns[0][0].total[0] }}%</span
+    >
+    de la población que labora es de genero femenino
+  </p>
+  <p>
+    C. El
+    <span style="color:#00d9dd"
+      >{{ (columns[0][1].total[0] * 100) / columns[0][0].total[0] }}%</span
+    >
+    de los trabajadores está entre los 18 y 25 años. Es importante recalcar que
+    no laboran personas menores de edad.
+  </p>
+  <p>
+    D. El
+    <span style="color:#00d9dd"
+      >{{ (columns[0][1].total[0] * 100) / columns[0][0].total[0] }}%</span
+    >
+    de la población evaluada manifiesta No tener hábito de fumar
+  </p>
+  <p>
+    E. El
+    <span style="color:#00d9dd"
+      >{{ (columns[0][1].total[0] * 100) / columns[0][0].total[0] }}%</span
+    >
+    de trabajadores manifiesta consumir licor bien sea habitual u ocasionalmente
+  </p>
+  <p>
+    F. El
+    <span style="color:#00d9dd"
+      >{{ (columns[0][1].total[0] * 100) / columns[0][0].total[0] }}%</span
+    >
+    de los trabajadores No practican alguna actividad física de manera habitual
+  </p>
+
+  <p>
+    G. El
+    <span style="color:#00d9dd"
+      >{{ (columns[0][1].total[0] * 100) / columns[0][0].total[0] }}%</span
+    >
+    de trabajadores evaluados se encuentran con sobrepeso.
+  </p>
+</div>

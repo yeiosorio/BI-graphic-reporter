@@ -1,0 +1,182 @@
+<mat-sidenav-container class="box-container ">
+    <mat-sidenav #sidenav opened mode="side" class="back-azul-azul-oscuro ">
+        <div class="row  " [ngClass]="expand">
+            <div class="col-s12 m2 back-azul-oscuro style-barr-top">
+                <p *ngIf="verEnMenu" id="label-area" class="font-blanca">{{'AREA_TRABAJO' | translate}}</p>
+                <a *ngIf="verEnMenu" (click)="cerrarPanel()">
+                    <i class="material-icons font-gris float-right">chevron_left</i>
+                </a>
+                <a *ngIf="!verEnMenu" (click)="abrirPanel()">
+                    <i class="material-icons font-gris float-right">chevron_right</i>
+                </a>
+            </div>
+            <div class="col-s12 m2 center back-azul-gris absolute">
+                <img *ngIf="verEnMenu" src="../../assets/img/1.png" alt="" class="circle tam-avatar margin-top-18">
+                <p *ngIf="verEnMenu" class="font-azul upperCase">{{usuario.nombre}}</p>
+
+            </div>
+
+
+            <div class="col-s12 m2 back-azul-azul-oscuro-oscuro margin-top-13em  padding-9 ">
+                
+                <p *ngIf="verEnMenu" class="font-blanca style-p subrayado display-flex">{{'CLIENTES' | translate}}
+                    <a [routerLink]="['/proyecto']" class="font-blanca style_btn margin-left-9  ">
+                        <i class=" material-icons margin-left-5 tam-font-valor-sub font-blanca">add</i>
+                    </a>
+                </p>
+            </div>
+            <!-- seleccion de cliente -->
+            <div class="input-field col s12 sin_marginTop font-blanca ">
+
+                <mat-select [(ngModel)]="selectEmpresa" (selectionChange)="cambiaCliente()" name="cliente" id="cliente" class="border-gris">
+                    <mat-option *ngFor="let op of clientes" [value]="op.empresa_id">
+                        {{op.nombre}}
+                    </mat-option>
+                </mat-select>
+
+
+            </div>
+
+            <div class="col-s12 m2 back-azul-azul-oscuro-oscuro margin-top-80 padding-9 ">
+                <p *ngIf="verEnMenu" class="font-blanca ">{{'INFO-ESQUEMA' | translate}}</p>
+            </div>
+            <div class="padding-9 style-box-scroll-externo">
+                <ul class="collapsible menu-collapsible-padre">
+                    <!-- origenes de datos -->
+                    <li [ngClass]="isDisableOrigen">
+                        <div class="collapsible-header menu-collapsible">
+                            <div [ngClass]="IcondesableOri"></div>
+                            <div class="margin-top-menos-10">
+                                <p class="font-blanca display-flex tam-letra-14 ">{{'ORIGEN-DATOS' | translate}}
+                                    <a [routerLink]="['/origenDatos']" class="font-blanca style_btn ">
+                                        <i class=" material-icons tam-font-valor-sub font-blanca">add</i>
+                                    </a>
+                                </p>
+
+                            </div>
+                        </div>
+                        <div class="collapsible-body">
+                            <div class="container-columns ">
+
+                                <div cdkDropList 
+                                #datosList="cdkDropList" 
+                                [cdkDropListData]="tablas" 
+                                [cdkDropListConnectedTo]="[]" 
+                                class="list-origen-datos"
+                                (cdkDropListDropped)="dropOrigen($event)">
+                                    <div class="list-box-origen-datos" 
+                                    *ngFor="let item of tablas; let i = index" 
+                                    cdkDrag>
+                                        <a class="font-blanca"
+                                        (click)="abrirTabla(i)">{{item.nombre}}</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </li>
+                    <!-- graficos -->
+                    <li [ngClass]="isDisableGraph">
+                        <div class="collapsible-header menu-collapsible">
+                            <div [ngClass]="IcondesableGra"></div>
+                            <div class="margin-top-menos-10">
+                                <p class="font-blanca display-flex tam-letra-14 ">{{'GRAFICOS' | translate}}
+                                    <a [routerLink]="['/graficos']" class="font-blanca style_btn ">
+                                        <i class=" material-icons tam-font-valor-sub font-blanca">add</i>
+                                    </a>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="collapsible-body">
+                            <div class="container-columns ">
+                                <!-- (cdkDropListDropped)="dropGraficos($event)" -->
+                                <div cdkDropList #graficasList="cdkDropList" [cdkDropListData]="graficas" [cdkDropListConnectedTo]="[]" class="list-origen-datos">
+                                    <div class="list-box-origen-datos" *ngFor="let item of graficas" cdkDrag>{{item.nombre}}</div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </li>
+                    <!-- espacios de trabajo -->
+                    <li [ngClass]="isDisableSpace">
+                        <div class="collapsible-header menu-collapsible">
+
+                            <div [ngClass]="IcondesableEsp"></div>
+                            <div class="margin-top-menos-10">
+                                <p class="font-blanca display-flex tam-letra-14 ">{{'ESPACIOS-TRABAJO' | translate}}
+                                    <a [routerLink]="['/espTrabajo']" class="font-blanca style_btn ">
+                                        <i class=" material-icons tam-font-valor-sub font-blanca">add</i>
+                                    </a>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="collapsible-body">
+                            <div class="container-columns ">
+                                <div cdkDropList #espaciosList="cdkDropList" [cdkDropListData]="espacios" [cdkDropListConnectedTo]="[]" class="list-origen-datos"
+                                    (cdkDropListDropped)="dropEspacios($event)">
+                                    <div class="list-box-origen-datos" *ngFor="let item of espacios" cdkDrag>{{item.nombre}}</div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </li>
+
+                </ul>
+
+
+
+            </div>
+
+
+            <!-- footer -->
+            <div class="col-s12 m2 style-barr-footer">
+                <a *ngIf="verEnMenu" (click)="cerrarPanel()">
+                    <i class="material-icons font-gris ">chevron_left</i>
+                </a>
+            </div>
+        </div>
+    </mat-sidenav>
+
+
+    <!-- contenido -->
+    <mat-sidenav-content [ngClass]="margiLeftDinamic">
+        <div class="col s2">
+            <mat-sidenav-container class="box-container2 ">
+                <!-- contenio panel interno -->
+                <mat-sidenav #sidenav3 mode="side" [(opened)]="opened" class="back-azul-azul-claro  tam-box-interna" (opened)="events.push('open!')"
+                    (closed)="events.push('close!')">
+
+                    <div class="row">
+                        <div class="col-s12 m2  back-azul-azul-oscuro style-box-edit ">
+
+
+                        </div>
+                    </div>
+
+
+
+                </mat-sidenav>
+
+
+                <!-- contenido -->
+                <mat-sidenav-content [(ngModel)]="opened" class="fondo-degrade-azul">
+                    <div class="col s12 center">
+
+
+                        <div id="iconos-3" class="center-div margin-top-30"></div>
+                        <p class="font-blanca">{{'CREAR_MULTIPLES_GRAFICAS' | translate}}</p>
+
+                        <div class="padding-60">
+
+
+
+                        </div>
+
+
+
+                    </div>
+                </mat-sidenav-content>
+            </mat-sidenav-container>
+        </div>
+    </mat-sidenav-content>
+</mat-sidenav-container>

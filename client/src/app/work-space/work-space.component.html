@@ -1,0 +1,262 @@
+<!-- contenido -->
+<mat-sidenav-container class="box-container ">
+  <mat-sidenav-content class="fondo-degrade-azul">
+    <div class="col s12 center">
+      <div style="height: 80px;">
+        <div class="float-right padding-4">
+          <a
+            (click)="newWorkSpace()"
+            class="waves-effect waves-light btn back-gris-btn"
+          >
+            <i class="material-icons left">add</i
+            >{{ "CREAR_ESPACIO" | translate }}</a
+          >
+        </div>
+      </div>
+    </div>
+
+    <!-- tabs -->
+    <div class="style-box-tabs back-azul-oscuro">
+      <ng-container *ngIf="openWorkSpaces.length === 0">
+        <p class="font-blanca">{{ "SIN_ESPACIO" | translate }}</p>
+      </ng-container>
+
+      <mat-tab-group
+        [(selectedIndex)]="tabSelect"
+        (selectedTabChange)="tabChanged($event)"
+      >
+        <mat-tab *ngFor="let workspace of openWorkSpaces; let i = index">
+          <ng-template id="tablas" mat-tab-label>
+            <div class="justific">
+              <p>{{ workspace.name }}</p>
+              <a class=" style-more1" mat-button (click)="closeGraph(i)">
+                <i class="material-icons  tam-letra-18  font-blanca">close</i>
+              </a>
+            </div>
+          </ng-template>
+          <ng-template matTabContent>
+            <div
+              class="input-field col s12 m6 tamaño-upload  center-div"
+              *ngIf="workspace.creationPhase !== 'Created'"
+            >
+              <input
+                name="nombre_espacio_trabajo"
+                type="text"
+                [(ngModel)]="workspace.name"
+                class="validate font-blanca"
+              />
+              <label for="nombre_grafica">{{
+                "NOMBRE_ESPACIO_TRABAJO" | translate
+              }}</label>
+            </div>
+            <button
+              mat-raised-button
+              (click)="openDialog(workspace.idWorkSpace)"
+              *ngIf="workspace.creationPhase !== 'New'"
+            >
+              {{ "ASSIGN_USER" | translate }}
+            </button>
+            <div 
+            id="ws{{tabSelect}}"
+              [ngGrid]="gridConfig"
+              style="background-color: #172538; min-height: 300px; border: 1px dashed #9e9e9e;"
+            >
+              <mat-card
+                *ngFor="let item of workspace.items; let iGraph = index"
+                [(ngGridItem)]="item.config"
+              >
+                <mat-card-header class="handle" *ngIf="item.type === 'chart'">
+                  <div class="justific">
+                    <p>{{ item.fieldCDK.nombreGrafica }}</p>
+                    <div style="width:100px; margin-left: 15px;">
+                      <mat-select
+                        *ngIf="workspace.creationPhase!=='Created'"
+                        (selectionChange)="changeTypeGraph($event, item)"
+                        [(value)]="item.fieldCDK.tipoGrafica"
+                      >
+                        <mat-optgroup
+                          *ngFor="let group of optionsGraphTypeGroup"
+                          [label]="group.name"
+                        >
+                          <mat-option
+                            *ngFor="let type of group.options"
+                            [value]="type.value"
+                          >
+                            {{ type.viewValue }}
+                          </mat-option>
+                        </mat-optgroup>
+                      </mat-select>
+                    </div>
+                    <button
+                      class=" style-more1"
+                      *ngIf="workspace.creationPhase!=='Created'"
+                      mat-button
+                      (click)="saveChangesGraph(item.fieldCDK)"
+                    >
+                      Guardar
+                    </button>
+                    <a
+                      class="style-more1 removeCar"
+                      mat-button
+                      *ngIf="workspace.creationPhase!=='Created'"
+                      (click)="quitItem(workspace.items, iGraph)"
+                      ><i class="material-icons  tam-letra-18  font-blanca">close</i>
+                    </a>
+                  </div>
+                </mat-card-header>
+
+                <mat-card-header class="handle" *ngIf="item.type === 'table'">
+                  <div class="justific">
+                    <p>{{ item.table.name }}</p>
+                    <a
+                    *ngIf="workspace.creationPhase!=='Created'"
+                      class="style-more1 removeCar"
+                      mat-button
+                      (click)="quitItem(workspace.items, iGraph)">
+                      <i class="material-icons  tam-letra-18  font-blanca">close</i>
+                    </a>
+                  </div>
+                </mat-card-header>
+
+                <mat-card-header class="handle" *ngIf="item.type === 'icon'">
+                  <div class="justific">
+                    <p>{{ item.icon.name }}</p>
+                    <a
+                    *ngIf="workspace.creationPhase!=='Created'"
+                      class=" style-more1"
+                      mat-button
+                      (click)="quitItem(workspace.items, iGraph)"
+                    >
+                      <i class="material-icons  tam-letra-18  font-blanca"
+                        >close</i
+                      >
+                    </a>
+                  </div>
+                </mat-card-header>
+
+                <mat-card-content
+                class="matCardContentCanvasGraph"
+                 *ngIf="item.type === 'chart'">
+                  <canvas
+                  class="canvasCardWorkSpaceGraph"
+                    class="canvas-ws"
+                    id="graph{{ tabSelect }}{{ item.fieldCDK.id }}"
+                  ></canvas>
+                </mat-card-content>
+                <mat-card-content *ngIf="item.type === 'icon'">
+                  <canvas
+                  class="canvasCardWorkSpaceIcon"
+                    mat-card-image
+                    *ngIf="!item.icon.onlyText"
+                    id="img{{ tabSelect }}{{ item.icon.id }}"
+                  ></canvas>
+                  <textarea
+                    matInput
+                    class="textArea-icon"
+                    [(ngModel)]="item.icon.textValue"
+                  >
+                  
+                </textarea>
+                </mat-card-content>
+
+                <mat-card-content *ngIf="item.type === 'table'">
+                  <div class="scroll-x">
+                    <table
+                      mat-table
+                      [dataSource]="item.table.dataSource"
+                      class="mat-elevation-z8 striped  responsive-table"
+                    >
+                      <ng-container
+                        [matColumnDef]="column"
+                        *ngFor="
+                          let column of item.table.header;
+                          let colIndex = index
+                        "
+                      >
+                        <mat-header-cell *matHeaderCellDef>
+                          {{ column }}
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let element">
+                          {{ element[colIndex] }}
+                        </mat-cell>
+                      </ng-container>
+
+                      <mat-header-row
+                        *matHeaderRowDef="item.table.displayedColumns"
+                      ></mat-header-row>
+                      <mat-row
+                        *matRowDef="
+                          let row;
+                          columns: item.table.displayedColumns
+                        "
+                      ></mat-row>
+                    </table>
+                  </div>
+                  <mat-paginator
+                    [pageSizeOptions]="[5, 10, 20]"
+                    showFirstLastButtons
+                  ></mat-paginator>
+                </mat-card-content>
+              </mat-card>
+            </div>
+
+            <div
+              class="input-field full-width col s12 m6   "
+              [ngClass]="
+                workspace.creationPhase === 'Created' ? 'disabledDiv' : ''
+              "
+            >
+              <mat-form-field class="full-width">
+                <textarea
+                  matInput
+                  style="height: 24px;"
+                  class="font-blanca"
+                  [(ngModel)]="workspace.description"
+                  placeholder="Descripción:"
+                ></textarea>
+              </mat-form-field>
+            </div>
+
+            <div class="margin-top-9">
+              <a
+                (click)="saveWorkSpace()"
+                *ngIf="workspace.creationPhase === 'New'"
+                class="waves-effect font-back-azul waves-light btn"
+              >
+                <i class="material-icons left"></i
+                >{{ "GUARDAR_ESPACIO" | translate }}</a
+              >
+              <a
+                *ngIf="workspace.creationPhase === 'Created'"
+                (click)="editWorkSpace(workspace)"
+                class="waves-effect font-back-azul waves-light btn"
+              >
+                <i class="material-icons left"></i
+                >{{ "EDITAR_ESPACIO" | translate }}</a
+              >
+              <a
+                *ngIf="workspace.creationPhase === 'Editing'"
+                (click)="saveChangesWorkSpace(workspace)"
+                class="waves-effect font-back-azul waves-light btn"
+              >
+                <i class="material-icons left"></i>Guardar Cambios</a
+              >
+              <a
+                *ngIf="workspace.creationPhase === 'Editing'"
+                (click)="cancelEditWorkSpace(workspace.idWorkSpace)"
+                class="waves-effect font-back-azul waves-light btn"
+              >
+                <i class="material-icons left"></i>{{ "CANCEL" | translate }}</a
+              >
+
+              <div class="col s12 m6">
+                <button (click)="download()"
+                        class="btn btn-primary">{{'EXPORTARPDF' | translate}}</button>
+            </div>
+            </div>
+          </ng-template>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

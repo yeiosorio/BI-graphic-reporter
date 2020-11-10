@@ -1,0 +1,649 @@
+<mat-sidenav-container class="box-container ">
+    <mat-sidenav #sidenav
+                 opened
+                 mode="side"
+                 class="back-azul-azul-oscuro ">
+        <div class="row  "
+             [ngClass]="expand">
+            <div class="col-s12 m2 back-azul-oscuro style-barr-top">
+                <p *ngIf="verEnMenu"
+                   id="label-area"
+                   class="font-blanca">{{'AREA_TRABAJO' | translate}}</p>
+                <a *ngIf="verEnMenu"
+                   (click)="cerrarPanel()">
+                    <i class="material-icons font-gris float-right">chevron_left</i>
+                </a>
+                <a *ngIf="!verEnMenu"
+                   (click)="abrirPanel()">
+                    <i class="material-icons font-gris float-right">chevron_right</i>
+                </a>
+            </div>
+            <div class="col-s12 m2 center back-azul-gris absolute">
+                <img *ngIf="verEnMenu"
+                     src="../../assets/img/1.png"
+                     alt=""
+                     class="circle tam-avatar margin-top-18">
+                <p *ngIf="verEnMenu"
+                   class="font-azul upperCase">{{usuario.nombre}}</p>
+
+            </div>
+
+
+            <div class="col-s12 m2 back-azul-azul-oscuro-oscuro margin-top-13em  padding-9 ">
+                <p *ngIf="verEnMenu"
+                   class="font-blanca style-p subrayado">{{'CLIENTES' | translate}}</p>
+            </div>
+            <!-- seleccion de cliente -->
+            <div class="input-field col s12 sin_marginTop font-blanca ">
+
+                <mat-select [(ngModel)]="selectEmpresa"
+                            name="cliente"
+                            id="cliente"
+                            class="border-gris">
+                    <mat-option *ngFor="let op of clientes"
+                                [value]="op.empresa_id">
+                        {{op.nombre}}
+                    </mat-option>
+                </mat-select>
+
+
+            </div>
+
+            <div class="col-s12 m2 back-azul-azul-oscuro-oscuro margin-top-80 padding-9 ">
+                <p *ngIf="verEnMenu"
+                   class="font-blanca ">{{'INFO-ESQUEMA' | translate}}</p>
+            </div>
+            <div class="padding-9 style-box-scroll-externo">
+                <ul class="collapsible menu-collapsible-padre">
+                    <!-- origenes de datos -->
+                    <li [ngClass]="isDisableOrigen">
+                        <div class="collapsible-header menu-collapsible">
+                            <div [ngClass]="IcondesableOri"></div>
+                            <div class="margin-top-menos-10">
+                                <p class="font-blanca">{{'ORIGEN-DATOS' | translate}}</p>
+                            </div>
+                        </div>
+                        <div class="collapsible-body">
+                            <div class="container-columns ">
+
+                                <div cdkDropList
+                                     #datosList="cdkDropList"
+                                     [cdkDropListData]="tablas"
+                                     [cdkDropListConnectedTo]="[]"
+                                     class="list-origen-datos"
+                                     (cdkDropListDropped)="dropOrigen($event)">
+                                    <div class="list-box-origen-datos"
+                                         *ngFor="let item of tablas"
+                                         cdkDrag>{{item.nombre}}</div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </li>
+                    <!-- graficos -->
+                    <li [ngClass]="isDisableGraph">
+                        <div class="collapsible-header menu-collapsible">
+                            <div [ngClass]="IcondesableGra"></div>
+                            <div class="margin-top-menos-10">
+                                <p class="font-blanca">{{'GRAFICOS' | translate}}</p>
+                            </div>
+                        </div>
+                        <div class="collapsible-body">
+                            <div class="container-columns ">
+                                <div cdkDropList
+                                     #graficasList="cdkDropList"
+                                     (cdkDropListDropped)="dropGraficos($event)"
+                                     [cdkDropListData]="graficas"
+                                     [cdkDropListConnectedTo]="[panel]"
+                                     class="list-origen-datos">
+                                    <div class="list-box-origen-datos"
+                                         *ngFor="let item of graficas"
+                                         cdkDrag>{{item.nombre}}</div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </li>
+                    <!-- espacios de trabajo -->
+                    <li [ngClass]="isDisableSpace">
+                        <div class="collapsible-header menu-collapsible">
+
+                            <div [ngClass]="IcondesableEsp"></div>
+                            <div class="margin-top-menos-10">
+                                <p class="font-blanca">{{'ESPACIOS-TRABAJO' | translate}}</p>
+                            </div>
+                        </div>
+                        <div class="collapsible-body">
+                            <span>Lorem ipsum dolor sit amet.</span>
+                        </div>
+
+                    </li>
+
+                </ul>
+
+
+
+            </div>
+
+
+            <!-- footer -->
+            <div class="col-s12 m2 style-barr-footer">
+                <a *ngIf="verEnMenu"
+                   (click)="cerrarPanel()">
+                    <i class="material-icons font-gris ">chevron_left</i>
+                </a>
+            </div>
+        </div>
+    </mat-sidenav>
+
+
+    <!-- contenido -->
+    <mat-sidenav-content [ngClass]="margiLeftDinamic">
+        <div class="col s2">
+            <mat-sidenav-container class="box-container2 ">
+                <!-- contenio panel interno -->
+                <mat-sidenav #sidenav3
+                             mode="side"
+                             [(opened)]="opened"
+                             class="back-azul-azul-claro  tam-box-interna"
+                             (opened)="events.push('open!')"
+                             (closed)="events.push('close!')">
+
+                    <div class="row">
+                        <div class="col-s12 m2  back-azul-azul-oscuro style-box-edit ">
+                            <div>
+                                <p class="font-blanca tam-letra-13 diplay-enLinea">
+                                    {{'MODO_EDICION' | translate}}</p>
+                                <i class=" material-icons font-blanca  float-right  margin-left-7">clear</i>
+                            </div>
+                            <div class="center-div">
+                                <p class="font-blanca tam-letra-13 diplay-enLinea">
+                                    {{'ARRASTRE_COLUMNAS' | translate}}</p>
+                            </div>
+
+                            <!-- seleccion de tabla -->
+                            <div class="input-field col s12 sin_marginTop font-blanca ">
+                                <p class="tam-letra-13 font-blanca"> {{'SELECT_TABLA' | translate}}</p>
+                                <mat-select [(ngModel)]="selectTable"
+                                            (selectionChange)="changeSelectTable($event)"
+                                            name="table"
+                                            id="table"
+                                            class="border-gris">
+                                    <mat-option *ngFor="let tabla of tablas"
+                                                [value]="tabla.nomb_tabla">
+                                        {{tabla.nombre}}
+                                    </mat-option>
+                                </mat-select>
+                            </div>
+                            <!-- lista de columnas -->
+                            <div class="margin-top-71">
+
+                                <!-- drag and drop de las columnas -->
+                                <div class="container-columns ">
+
+                                    <div cdkDropList
+                                         #columnasList="cdkDropList"
+                                         [cdkDropListData]="columnas"
+                                         [cdkDropListConnectedTo]="[ejexList,exjeyList]"
+                                         class="list-columns"
+                                         (cdkDropListDropped)="drop($event, 'columnasList')">
+                                        <div class="box-columns"
+                                             *ngFor="let item of columnas"
+                                             cdkDrag>{{item}}</div>
+                                    </div>
+                                </div>
+                                <!-- drag and drop de los ejes -->
+
+                                <!-- ejes -->
+
+                                <div class="container-columns ">
+                                    <p class="tam-letra-13 font-blanca">{{'EJEX' | translate}}:</p>
+
+                                    <div cdkDropList
+                                         #ejexList="cdkDropList"
+                                         [cdkDropListData]="ejex"
+                                         [cdkDropListConnectedTo]="[columnasList,exjeyList]"
+                                         class="list-columns-x "
+                                         (cdkDropListDropped)="drop($event,'ejexList' )">
+                                        <div class="box-columns"
+                                             *ngFor="let item of ejex; let i = index"
+                                             cdkDrag>
+                                            <p class="font-blanca style-p-oper">{{item}}</p>
+                                            <mat-select (selectionChange)="changeSelectOperationEjex($event, i)"
+                                                        name="operation"
+                                                        id="operationX"
+                                                        class="style-select-operation">
+                                                <mat-option *ngFor="let op of operacion"
+                                                            [value]="op.id">
+                                                    {{op.nombre}}
+                                                </mat-option>
+                                            </mat-select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="container-columns ">
+                                    <p class="tam-letra-13 font-blanca">{{'EJEY' | translate}}:</p>
+                                    <div cdkDropList
+                                         #exjeyList="cdkDropList"
+                                         [cdkDropListData]="ejey"
+                                         [cdkDropListConnectedTo]="[columnasList,ejexList]"
+                                         class="list-columns"
+                                         (cdkDropListDropped)="drop($event, 'exjeyList')">
+                                        <div class="box-columns"
+                                             *ngFor="let item of ejey; let i = index"
+                                             cdkDrag>
+                                            <p class="font-blanca style-p-oper">{{item}}</p>
+                                            <mat-select (selectionChange)="changeSelectOperationEjey($event, i)"
+                                                        name="operation"
+                                                        id="operationY"
+                                                        class="style-select-operation">
+                                                <mat-option *ngFor="let op of operacion"
+                                                            [value]="op.id">
+                                                    {{op.nombre}}
+                                                </mat-option>
+                                            </mat-select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- fin  ejes -->
+                            </div>
+                            <!-- fin  columnas -->
+                            <!-- tipos de graficas -->
+                            <div class="margin-top-60_m">
+                                <p class="tam-letra-13 font-blanca">{{'TIPO_GRAFICO' | translate}}:</p>
+                                <div class="style-box-scroll">
+                                    <ul class="collapsible menu-collapsible-padre">
+                                        <!-- grafica de barras -->
+                                        <li>
+                                            <div class="collapsible-header menu-collapsible">
+                                                <div id="icono-barras"></div>
+                                                <div class="margin-top-menos-10">
+                                                    <p class="font-blanca tam-letra-13">{{'GRAFICO_BARRAS' | translate}}</p>
+                                                </div>
+                                            </div>
+                                            <div class="collapsible-body style-box-graficas">
+                                                <section class="style-body-radio">
+
+                                                    <mat-radio-group name="tiposGraficas"
+                                                                     (change)="cambiaTipo($event)"
+                                                                     [(ngModel)]="selectGraphType"
+                                                                     class="diplay-block">
+                                                        <mat-radio-button class="style-radio-grafica"
+                                                                          value="bar">Barra</mat-radio-button>
+                                                        <mat-radio-button class="style-radio-grafica"
+                                                                          value="otra">Otra</mat-radio-button>
+                                                    </mat-radio-group>
+                                                </section>
+                                            </div>
+                                        </li>
+                                        <!--  fin grafica de barras -->
+                                        <!-- grafica de lineas -->
+                                        <li>
+                                            <div class="collapsible-header menu-collapsible">
+                                                <div id="icono-lineas"></div>
+                                                <div class="margin-top-menos-10">
+                                                    <p class="font-blanca tam-letra-13">{{'GRAFICO_LINEAS' | translate}}</p>
+                                                </div>
+                                            </div>
+                                            <div class="collapsible-body style-box-graficas">
+                                                <section class="style-body-radio">
+
+                                                    <mat-radio-group name="tiposGraficas"
+                                                                     (change)="cambiaTipo($event)"
+                                                                     [(ngModel)]="selectGraphType"
+                                                                     class="diplay-block">
+                                                        <mat-radio-button class="style-radio-grafica"
+                                                                          value="line">Linea</mat-radio-button>
+
+                                                    </mat-radio-group>
+                                                </section>
+                                            </div>
+                                        </li>
+                                        <!-- fin grafica de lineas -->
+                                        <!-- grafica de sectores -->
+
+                                        <li>
+                                            <div class="collapsible-header menu-collapsible">
+                                                <div id="icono-sectores"></div>
+                                                <div class="margin-top-menos-10">
+                                                    <p class="font-blanca tam-letra-13">{{'GRAFICO_SECTORES' | translate}}</p>
+                                                </div>
+                                            </div>
+                                            <div class="collapsible-body style-box-graficas">
+                                                <section class="style-body-radio">
+
+                                                    <mat-radio-group name="tiposGraficas"
+                                                                     (change)="cambiaTipo($event)"
+                                                                     [(ngModel)]="selectGraphType"
+                                                                     class="diplay-block">
+                                                        <mat-radio-button class="style-radio-grafica"
+                                                                          value="pie">Torta</mat-radio-button>
+                                                        <mat-radio-button class="style-radio-grafica"
+                                                                          value="doughnut">Rosquilla</mat-radio-button>
+
+
+                                                    </mat-radio-group>
+                                                </section>
+                                            </div>
+                                        </li>
+                                        <!-- fin grafica de sectores -->
+                                        <!-- grafica de dispersion -->
+
+                                        <li>
+                                            <div class="collapsible-header menu-collapsible">
+                                                <div id="icono-sectores"></div>
+                                                <div class="margin-top-menos-10">
+                                                    <p class="font-blanca tam-letra-13">otra</p>
+                                                </div>
+                                            </div>
+                                            <div class="collapsible-body">
+                                                <span>otra</span>
+                                            </div>
+                                        </li>
+                                        <!-- fin grafica de dispersion -->
+                                        <!-- grafica de area -->
+
+                                        <li>
+                                            <div class="collapsible-header menu-collapsible">
+                                                <div id="icono-sectores"></div>
+                                                <div class="margin-top-menos-10">
+                                                    <p class="font-blanca tam-letra-13">otra</p>
+                                                </div>
+                                            </div>
+                                            <div class="collapsible-body">
+                                                <span>otra</span>
+                                            </div>
+                                        </li>
+                                        <!-- fin grafica de area -->
+                                        <!-- grafica de maya -->
+
+                                        <li>
+                                            <div class="collapsible-header menu-collapsible">
+                                                <div id="icono-sectores"></div>
+                                                <div class="margin-top-menos-10">
+                                                    <p class="font-blanca tam-letra-13">otra</p>
+                                                </div>
+                                            </div>
+                                            <div class="collapsible-body">
+                                                <span>otra</span>
+                                            </div>
+                                        </li>
+                                        <!-- fin grafica de maya -->
+
+                                    </ul>
+                                </div>
+                            </div>
+                            <div>
+                                <a class="waves-effect waves-light btn font-back-azul-oscuro style-btn-grah tam-letra-13"
+                                   (click)="getInfo()">
+                                    <i class="material-icons left"></i>{{'GENERAR_GRAFICA' | translate}}</a>
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <!-- fin contenio panel interno -->
+
+                </mat-sidenav>
+
+
+                <!-- contenido -->
+                <mat-sidenav-content [(ngModel)]="opened"
+                                     class="fondo-degrade-azul">
+                    <div class="col s12 center">
+
+                        <img class="margin-top-30 tam-icono-png"
+                             src="../../assets/img/icono-tabla.png"
+                             width="1"
+                             height="1">
+                        <h5 class="font-blanca">¡{{'PERFECTO' | translate}}!</h5>
+                        <p class="font-blanca">{{'SELECCARCHIVOS' | translate}}</p>
+
+                        <div class="padding-60">
+                            <!-- esto permite habilitar la linea de los pasos en caso que se pueda saltar -->
+                            <!-- <button mat-raised-button
+                                    (click)="isLinear = !isLinear"
+                                    id="toggle-linear">
+                                {{!isLinear ? 'Enable linear mode' : 'Disable linear mode'}}
+                            </button> -->
+
+                            <mat-horizontal-stepper [linear]="isLinear"
+                                                    #stepper
+                                                    class="fondo-degrade-azul-oscuro padding-1">
+                                <!-- primer paso -->
+                                <mat-step [stepControl]="firstFormGroup"
+                                          [editable]="isEditable">
+                                    <form [formGroup]="firstFormGroup">
+                                        <div class="center">
+
+                                            <div id="iconos-3"
+                                                 class="center-div margin-top-30"></div>
+
+                                            <p class="font-blanca">{{'PUEDE_IMPORTAR' | translate}}</p>
+                                            <div class="circule">
+                                                <div id="iconos-6"
+                                                     class="center-div margin-top-30"></div>
+                                            </div>
+                                            <p class="font-blanca ">
+                                                <span class="negrita">{{'TIPOS_COMPATIBLES' | translate}}:</span> {{'TIPOS' | translate}}</p>
+                                            <div class="file-field input-field col s12 m6 l4 tamaño-upload center-div">
+                                                <div class="btn font-back-azul">
+                                                    <span>{{'IMPORTAR' | translate}}</span>
+                                                    <input type="file"
+                                                           id="selectFile"
+                                                           name="selectFile"
+                                                           class="font-blanca"
+                                                           (change)="fileUploads($event)">
+                                                </div>
+                                                <div class="file-path-wrapper">
+                                                    <input class="file-path validate"
+                                                           type="text">
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- Espacio para mostrar informacion y validacion del archivo csv cargado -->
+                                            <div *ngIf="typeExtension" style="color: #c3c3c3; font-size: 16px; padding: 10px;">
+                                                <i class="material-icons" style="color: aliceblue; margin-left: -33px; position: absolute;">info</i>&nbsp;
+                                                Lo sentimos el formato del archivo que va a cargar aun no es permitido!.
+                                            </div>
+                                            <div class="row" *ngIf="tamano != '' " style="margin-bottom: 0px; margin-top: 10px;">
+                                                <div style="">
+                                                    <label style="color: #40c7ff; font-size: 18px;">Resumen de la carga:</label> 
+                                                </div>
+                                                <div class="col s12 m6">
+                                                    <div style="float: right;">
+                                                        <label style="color: #c3c3c3; font-size: 16px;">Tamaño del archivo: </label><label style="color: #40c7ff; font-size: 14px;"> {{tamano}} </label> 
+                                                    </div>
+                                                </div>
+                                                <div class="col s12 m6">
+                                                    <div style="float: left;">
+                                                        <label style="color: #c3c3c3; font-size: 16px;">Filas totales: </label><label style="color: #40c7ff; font-size: 14px;"> {{totalfilas}} </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+    
+                                            <div *ngIf="duplicateColunms != '' " class="duplicateColunms" style="padding: 6px;">
+                                                
+                                                <p style="color: #c3c3c3; font-size: 16px;">
+                                                    <i class="material-icons" style="color: aliceblue; margin-left: -33px; position: absolute;">info</i>&nbsp;
+                                                    Las siguientes columnas estan duplicadas, por favor revise el archivo e intente cargarlo de nuevo!.
+                                                </p>
+                                                <label *ngFor="let duplicateColunm of duplicateColunms" style="color: #40c7ff; font-size: 14px; padding: 10px;">
+                                                    {{duplicateColunm | uppercase }},
+                                                </label>
+                                            </div>
+
+                                            <div class="input-field col s12 m6 l4 ">
+                                                <a class="waves-effect waves-light btn font-back-azul-oscuro margen-derecha"
+                                                   (click)="omitirTutorial()">
+                                                    <i class="material-icons left"></i>{{'OMITIR_TUTORIAL' | translate}}</a>
+                                                <a class="waves-effect waves-light btn font-back-azul" *ngIf="disabledCargaArchivo"
+                                                   (click)="cargarDatos(stepper)" disabled>
+                                                    <i class="material-icons left"></i>{{'CONTINUAR' | translate}}
+                                                </a>
+                                                <a class="waves-effect waves-light btn font-back-azul" *ngIf="!disabledCargaArchivo"
+                                                   (click)="cargarDatos(stepper)">
+                                                    <i class="material-icons left"></i>{{'CONTINUAR' | translate}}
+                                                </a>
+
+                                            </div>
+
+                                        </div>
+
+                                    </form>
+                                </mat-step>
+                                <!-- fin de primer paso -->
+                                <!-- segundo paso -->
+                                <mat-step [editable]="isEditable">
+                                    <div class="center">
+                                        <p class="font-blanca">{{'PREVIZUALIZAR_DATOS' | translate}}</p>
+                                        <div class="circule">
+                                            <div id="iconos-7"
+                                                 class="center-div margin-top-30"></div>
+                                        </div>
+                                        <div class="input-field col s12 tamaño-upload  center-div">
+                                            <input name="nombre_tabla"
+                                                   type="text"
+                                                   [(ngModel)]="nameTable"
+                                                   class="validate font-blanca">
+                                            <label for="nombre_tabla">{{'NOMBRE_DE_TABLA' | translate}}*</label>
+                                        </div>
+                                        <div class="scroll-x">
+                                            <table mat-table
+                                                   [dataSource]="dataSource"
+                                                   class="mat-elevation-z8 striped  responsive-table">
+                                                <ng-container *ngFor="let disCol of header; let colIndex = index"
+                                                              matColumnDef="{{disCol}}">
+                                                    <mat-header-cell *matHeaderCellDef>
+                                                        <input class="check-head"
+                                                               checked="checked"
+                                                               type="checkbox"
+                                                               (change)="seleccion(colIndex)" />{{disCol}} </mat-header-cell>
+                                                    <mat-cell *matCellDef="let element "> {{element[colIndex]}}
+                                                    </mat-cell>
+                                                </ng-container>
+
+                                                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                                                <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+
+
+                                            </table>
+                                        </div>
+                                        <mat-paginator [pageSizeOptions]="[5, 10, 20]"
+                                                       showFirstLastButtons></mat-paginator>
+                                        <div>
+                                            <p class="font-azul">{{'RESUMEN_CARGA' | translate}}</p>
+                                        </div>
+                                        <div class="style-p-info-carga center-div">
+                                            <p class="font-blanca tam-letra-13">{{'TAMANO_ARCHIVO' | translate}}:
+                                                <span class="font-blanca">{{tamano}}</span>
+                                            </p>
+
+                                        </div>
+                                        <br>
+                                        <a class="waves-effect waves-light btn font-back-azul"
+                                           (click)="guardarTabla(stepper,sidenav3 )">
+                                            <i class="material-icons left"></i>{{'IMPORTAR_DATOS' | translate}}</a>
+                                    </div>
+                                </mat-step>
+                                <!-- fin de segubdo paso -->
+                                <!-- TERCER PASO -->
+                                <mat-step [editable]="isEditable">
+                                    <div class="center">
+                                        <div id="iconos-3"
+                                             class="center-div margin-top-30"></div>
+                                        <p class="font-blanca">{{'CREAR_MULTIPLES_GRAFICAS' | translate}}</p>
+                                        <div class="input-field col s12 tamaño-upload  center-div">
+                                            <input name="nombre_grafica"
+                                                   type="text"
+                                                   [(ngModel)]="nameGraph"
+                                                   class="validate font-blanca">
+                                            <label for="nombre_grafica">{{'NOMBRE_GRAFICA' | translate}}*</label>
+                                        </div>
+
+
+                                        <div class="row">
+                                            <div class="container">
+                                                <div class="m-5">
+                                                    <div class="card col-md-6 offset-md-3">
+                                                        <canvas #lineCanvas></canvas>
+
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <a class="waves-effect waves-light btn font-back-azul"
+                                           (click)="guardarGrafica(stepper,sidenav3 )">
+                                            <i class="material-icons left"></i>{{'CONTINUAR' | translate}}</a>
+                                    </div>
+                                </mat-step>
+                                <!-- FIN DEL TERCER PASO -->
+                                <!-- CUARTO PASO -->
+                                <mat-step [editable]="isEditable">
+                                    <div class="center">
+                                        <div id="iconos-4"
+                                             class="center-div margin-top-30"></div>
+                                        <p class="font-blanca">{{'CADA_CLIENTE_MULTIPLE' | translate}}</p>
+                                        <div class="input-field col s12 tamaño-upload  center-div">
+                                            <input name="nombre_espacio_trabajo"
+                                                   type="text"
+                                                   [(ngModel)]="nameWorkSpace"
+                                                   class="validate font-blanca">
+                                            <label for="nombre_espacio_trabajo">{{'NOMBRE_ESPACIO_TRABAJO' | translate}}*</label>
+                                        </div>
+                                        <!-- espacio drag and drop -->
+                                        <!-- Area de trabajo -->
+                                        <!-- <mat-grid-list cols="2" rowHeight="460px" cdkDropList class="example-list">
+                                             (cdkDropListDropped)="dropGraficos($event)" -->
+
+                                        <mat-grid-list rowHeight="200px"
+                                                       cols="4"
+                                                       cdkDropList
+                                                       #panel="cdkDropList"
+                                                       class="grid-list"
+                                                       [cdkDropListData]="graphData"
+                                                       (cdkDropListDropped)="dropGraficos($event)"
+                                                       [cdkDropListConnectedTo]="[graficasList]">
+                                            <mat-grid-tile *ngFor="let graph of graphData; let i = index"
+                                                           class="example-box"
+                                                           cdkDrag
+                                                           [colspan]="graph.cols"
+                                                           [rowspan]="graph.rows">
+                                                <mat-card>
+                                                    <mat-card-header>
+                                                        <mat-card-title>
+                                                            {{ graph.nombre }}
+                                                        </mat-card-title>
+                                                    </mat-card-header>
+
+                                                    <mat-card-content class="dashboard-card-content">
+
+                                                        <canvas id="lineCanvas_{{i}}"></canvas>
+                                                    </mat-card-content>
+                                                </mat-card>
+                                            </mat-grid-tile>
+                                        </mat-grid-list>
+
+
+                                        <div class="margin-top-10">
+                                            <a class="waves-effect waves-light btn font-back-azul"
+                                               (click)="guardarEspacio( )">
+                                                <i class="material-icons left"></i>{{'FINALIZAR_TUTORIAL' | translate}}</a>
+                                        </div>
+
+                                    </div>
+
+                                </mat-step>
+                                <!-- FIN CUARTO PASO -->
+                            </mat-horizontal-stepper>
+                        </div>
+
+
+
+                    </div>
+                </mat-sidenav-content>
+            </mat-sidenav-container>
+        </div>
+    </mat-sidenav-content>
+</mat-sidenav-container>

@@ -1,0 +1,38 @@
+{
+    "name": "bi-gl",
+    "version": "1.0.0",
+    "description": "software development for data analytics and graphical presentation of data",
+    "main": "server.js",
+    "scripts": {
+        "start": "node app/server.js",
+        "dev": "nodemon  app/server.js"
+    },
+    "keywords": [
+        "BI",
+        "GLStudios",
+        "gato",
+        "loco"
+    ],
+    "author": "GL Studios",
+    "license": "ISC",
+    "dependencies": {
+        "@angular/cli": "^7.1.4",
+        "body-parser": "^1.18.3",
+        "cookie-parser": "^1.4.3",
+        "cors": "^2.8.5",
+        "ejs": "^2.6.1",
+        "express": "^4.16.4",
+        "express-myconnection": "^1.0.4",
+        "jsonwebtoken": "^5.7.0",
+        "md5": "^2.2.1",
+        "moment": "^2.23.0",
+        "mongojs": "^2.6.0",
+        "morgan": "^1.9.1",
+        "mysql": "^2.16.0",
+        "react-grid-layout": "^0.16.6",
+        "xlsx": "^0.14.1"
+    },
+    "devDependencies": {
+        "nodemon": "^1.18.9"
+    }
+}

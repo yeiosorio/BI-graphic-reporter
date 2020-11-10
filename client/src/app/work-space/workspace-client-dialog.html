@@ -1,0 +1,14 @@
+<div id="dialogWorkSpace">
+  <h1 mat-dialog-title>{{"ASSIGN_USER" | translate}}s</h1>
+  <div mat-dialog-content>
+    <section class="section-workpaceUser-dialog">
+      <mat-checkbox class="example-margin" *ngFor="let user of workSpaceUsers" [(ngModel)]="user.checked"
+        >{{user.userName}}</mat-checkbox
+      >
+    </section>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-button (click)="assignUsersToWorkSpaces()">Save</button>
+    
+  </div>
+</div>

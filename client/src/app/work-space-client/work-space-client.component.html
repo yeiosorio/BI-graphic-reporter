@@ -1,0 +1,193 @@
+<!-- contenido -->
+<mat-sidenav-container class="box-container ">
+  <mat-sidenav-content class="fondo-degrade-azul">
+    <!-- tabs -->
+    <div class="style-box-tabs back-azul-oscuro" style="margin-top: 65px;">
+      <ng-container *ngIf="openWorkSpaces.length === 0">
+        <p class="font-blanca">{{ "SIN_ESPACIO" | translate }}</p>
+      </ng-container>
+
+      <mat-tab-group
+        [(selectedIndex)]="tabSelect"
+        (selectedTabChange)="tabChanged($event)"
+      >
+        <mat-tab *ngFor="let workspace of openWorkSpaces; let i = index">
+          <ng-template id="tablas" mat-tab-label>
+            <div class="justific">
+              <p>{{ workspace.name }}</p>
+              <a class=" style-more1" mat-button (click)="closeGraph(i)">
+                <i class="material-icons  tam-letra-18  font-blanca">close</i>
+              </a>
+            </div>
+          </ng-template>
+          <ng-template matTabContent>
+            <div class="input-field col s12 m6 tamaño-upload  center-div">
+              <!-- DatePicker Date Init-->
+              <mat-form-field>
+                <input
+                  matInput
+                  [matDatepicker]="picker"
+                  placeholder="Elije fecha inicial"
+                  [formControl]="workspace.date.init"
+                  (dateChange)="dateChange($event, 'init')"
+                />
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="picker"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+              </mat-form-field>
+
+              <!-- DatePicker Date End-->
+              <mat-form-field>
+                <input
+                  matInput
+                  [matDatepicker]="picker2"
+                  placeholder="Elije fecha Final"
+                  [formControl]="workspace.date.end"
+                  (dateChange)="dateChange($event, 'end')"
+                />
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="picker2"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #picker2></mat-datepicker>
+              </mat-form-field>
+              <button
+                class="btnFilter"
+                mat-raised-button
+                (click)="filterForDate()"
+              >
+                Filtrar Graficas
+              </button>
+            </div>
+            <div
+              [ngGrid]="gridConfig"
+              style="background-color: #172538; min-height: 300px; border: 1px dashed #9e9e9e;"
+            >
+              <mat-card
+                *ngFor="let item of workspace.items; let iGraph = index"
+                [(ngGridItem)]="item.config"
+                style="display:inline-table"
+                [ngDraggable]="false"
+                [ngResizable]="false"
+              >
+                <mat-card-header
+                  class="handle"
+                  *ngIf="item.type === 'chart'"
+                  style="padding:0px;"
+                >
+                  <p>{{ item.fieldCDK.nombreGrafica }} </p>
+                  <mat-form-field>
+                    <mat-label>Favorite food</mat-label>
+                    <mat-select>
+                      <mat-option
+                        *ngFor="let food of optionsGraphTypeGroup"
+                        [value]="food.value"
+                      >
+                        {{ food.name }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </mat-card-header>
+
+                <mat-card-header class="handle" *ngIf="item.type === 'table'">
+                  {{ item.table.nombre }}
+                </mat-card-header>
+                <mat-card-header class="handle" *ngIf="item.type === 'icon'">
+                  <div class="justific">
+                    <p>{{ item.icon.name }}</p>
+                    <a
+                      class=" style-more1"
+                      mat-button
+                      (click)="removeItem(workspace.items, iGraph)"
+                    >
+                      <i class="material-icons  tam-letra-18  font-blanca"
+                        >close</i
+                      >
+                    </a>
+                  </div>
+                </mat-card-header>
+                <mat-card-content *ngIf="item.type === 'chart'">
+                  <canvas
+                    class="canvas-ws"
+                    id="graph{{tabSelect}}{{item.id}}"
+                  ></canvas>
+                </mat-card-content>
+                <mat-card-content *ngIf="item.type === 'icon'">
+                  <canvas
+                    mat-card-image
+                    *ngIf="!item.icon.onlyText"
+                    id="img{{ tabSelect }}{{ item.icon.id }}"
+                  ></canvas>
+                  <input
+                    *ngIf="!item.icon.onlyText"
+                    matInput
+                    [(ngModel)]="item.icon.textValue"
+                    class="text-icon"
+                  />
+                  <textarea
+                    *ngIf="item.icon.onlyText"
+                    matInput
+                    class="textArea-icon"
+                    [(ngModel)]="item.icon.textValue"
+                  ></textarea>
+                </mat-card-content>
+                <mat-card-content *ngIf="item.type === 'table'">
+                  <div class="scroll-x">
+                    <table
+                      mat-table
+                      [dataSource]="item.table.dataSource"
+                      class="mat-elevation-z8 striped  responsive-table"
+                    >
+                      <ng-container
+                        [matColumnDef]="column"
+                        *ngFor="
+                          let column of item.table.header;
+                          let colIndex = index
+                        "
+                      >
+                        <mat-header-cell *matHeaderCellDef>
+                          {{ column }}
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let element">
+                          {{ element[colIndex] }}
+                        </mat-cell>
+                      </ng-container>
+
+                      <mat-header-row
+                        *matHeaderRowDef="item.table.displayedColumns"
+                      ></mat-header-row>
+                      <mat-row
+                        *matRowDef="
+                          let row;
+                          columns: item.table.displayedColumns
+                        "
+                      ></mat-row>
+                    </table>
+                  </div>
+                  <mat-paginator
+                    [pageSizeOptions]="[5, 10, 20]"
+                    showFirstLastButtons
+                  ></mat-paginator>
+                </mat-card-content>
+              </mat-card>
+            </div>
+
+            <div class="input-field full-width col s12 m6  disabledDiv ">
+              <mat-form-field class="full-width">
+                <textarea
+                  matInput
+                  style="height: 24px;"
+                  class="font-blanca"
+                  [(ngModel)]="workspace.description"
+                  placeholder="Descripción:"
+                ></textarea>
+              </mat-form-field>
+            </div>
+          </ng-template>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

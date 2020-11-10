@@ -1,0 +1,526 @@
+<mat-sidenav-container class="box-container ">
+    <mat-sidenav #sidenav
+                 opened
+                 mode="side"
+                 class="back-azul-azul-oscuro ">
+        <div class="row  "
+             [ngClass]="expand">
+            <div class="col-s12 m2 back-azul-oscuro style-barr-top">
+                <p *ngIf="verEnMenu"
+                   id="label-area"
+                   class="font-blanca">{{'AREA_TRABAJO' | translate}}</p>
+                <a *ngIf="verEnMenu"
+                   (click)="cerrarPanel()">
+                    <i class="material-icons font-gris float-right">chevron_left</i>
+                </a>
+                <a *ngIf="!verEnMenu"
+                   (click)="abrirPanel()">
+                    <i class="material-icons font-gris float-right">chevron_right</i>
+                </a>
+            </div>
+            <div class="col-s12 m2 center back-azul-gris absolute">
+                <img *ngIf="verEnMenu"
+                     src="../../assets/img/1.png"
+                     alt=""
+                     class="circle tam-avatar margin-top-18">
+                <p *ngIf="verEnMenu"
+                   class="font-azul upperCase">{{usuario.nombre}}</p>
+
+            </div>
+
+
+            <div class="col-s12 m2 back-azul-azul-oscuro-oscuro margin-top-13em  padding-9 ">
+                <p *ngIf="verEnMenu"
+                   class="font-blanca style-p subrayado display-flex">{{'CLIENTES' | translate}}
+                    <a [routerLink]="['/proyecto']"
+                       class="font-blanca style_btn margin-left-9  ">
+                        <i class=" material-icons margin-left-5 tam-font-valor-sub font-blanca">add</i>
+                    </a>
+                </p>
+            </div>
+            <!-- seleccion de cliente -->
+            <div class="input-field col s12 sin_marginTop font-blanca ">
+
+                <mat-select [(ngModel)]="selectEmpresa"
+                            (selectionChange)="cambiaCliente()"
+                            name="cliente"
+                            id="cliente"
+                            class="border-gris">
+                    <mat-option *ngFor="let op of clientes"
+                                [value]="op.empresa_id">
+                        {{op.nombre}}
+                    </mat-option>
+                </mat-select>
+
+
+            </div>
+
+            <div class="col-s12 m2 back-azul-azul-oscuro-oscuro margin-top-80 padding-9 ">
+                <p *ngIf="verEnMenu"
+                   class="font-blanca ">{{'INFO-ESQUEMA' | translate}}</p>
+            </div>
+            <div class="padding-9 style-box-scroll-externo">
+                <ul class="collapsible menu-collapsible-padre">
+                    <!-- origenes de datos -->
+                    <li [ngClass]="isDisableOrigen">
+                        <div class="collapsible-header menu-collapsible">
+                            <div [ngClass]="IcondesableOri"></div>
+                            <div class="margin-top-menos-10">
+                                <p class="font-blanca display-flex tam-letra-14 ">{{'ORIGEN-DATOS' | translate}}
+                                    <a [routerLink]="['/origenDatos']"
+                                       class="font-blanca style_btn ">
+                                        <i class=" material-icons tam-font-valor-sub font-blanca">add</i>
+                                    </a>
+                                </p>
+
+                            </div>
+                        </div>
+                        <div class="collapsible-body">
+                            <div class="container-columns ">
+
+                                <div cdkDropList
+                                     #datosList="cdkDropList"
+                                     [cdkDropListData]="tablas"
+                                     [cdkDropListConnectedTo]="[]"
+                                     class="list-origen-datos"
+                                     (cdkDropListDropped)="dropOrigen($event)">
+                                    <div class="list-box-origen-datos"
+                                         *ngFor="let item of tablas"
+                                         cdkDrag>{{item.nombre}}</div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </li>
+                    <!-- graficos -->
+                    <li [ngClass]="isDisableGraph">
+                        <div class="collapsible-header menu-collapsible">
+                            <div [ngClass]="IcondesableGra"></div>
+                            <div class="margin-top-menos-10">
+                                <p class="font-blanca display-flex tam-letra-14 ">{{'GRAFICOS' | translate}}
+
+                                </p>
+                            </div>
+                        </div>
+                        <div class="collapsible-body">
+                            <div class="container-columns ">
+                                <!-- (cdkDropListDropped)="dropGraficos($event)" -->
+                                <div cdkDropList
+                                     #graficasList="cdkDropList"
+                                     [cdkDropListData]="graficas"
+                                     [cdkDropListConnectedTo]="[]"
+                                     class="list-origen-datos">
+                                    <div class="list-box-origen-datos"
+                                         *ngFor="let item of graficas ; let i = index"
+                                         cdkDrag> <a class="font-blanca"
+                                           (click)="abrirGrafica(i, sidenav3)">{{item.nombre}}</a></div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </li>
+                    <!-- espacios de trabajo -->
+                    <li [ngClass]="isDisableSpace">
+                        <div class="collapsible-header menu-collapsible">
+
+                            <div [ngClass]="IcondesableEsp"></div>
+                            <div class="margin-top-menos-10">
+                                <p class="font-blanca display-flex tam-letra-14 ">{{'ESPACIOS-TRABAJO' | translate}}
+                                    <a [routerLink]="['/espTrabajo']"
+                                       class="font-blanca style_btn ">
+                                        <i class=" material-icons tam-font-valor-sub font-blanca">add</i>
+                                    </a>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="collapsible-body">
+                            <div class="container-columns ">
+                                <div cdkDropList
+                                     #espaciosList="cdkDropList"
+                                     [cdkDropListData]="espacios"
+                                     [cdkDropListConnectedTo]="[]"
+                                     class="list-origen-datos">
+                                    <div class="list-box-origen-datos"
+                                         *ngFor="let item of espacios"
+                                         cdkDrag>
+                                         cdkDrag>{{item.nombre}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </li>
+
+                </ul>
+
+
+
+            </div>
+
+
+            <!-- footer -->
+            <div class="col-s12 m2 style-barr-footer">
+                <a *ngIf="verEnMenu"
+                   (click)="cerrarPanel()">
+                    <i class="material-icons font-gris ">chevron_left</i>
+                </a>
+            </div>
+        </div>
+    </mat-sidenav>
+
+
+    <!-- contenido -->
+    <mat-sidenav-content [ngClass]="margiLeftDinamic">
+        <div class="col s2">
+            <mat-sidenav-container class="box-container2 ">
+                <!-- contenio panel interno -->
+                <mat-sidenav #sidenav3
+                             mode="side"
+                             [(opened)]="opened"
+                             class="back-azul-azul-claro  tam-box-interna"
+                             (opened)="events.push('open!')"
+                             (closed)="events.push('close!')">
+
+                    <div class="row">
+                        <div class="col-s12 m2  back-azul-azul-oscuro style-box-edit ">
+                            <div>
+                                <p class="font-blanca tam-letra-13 diplay-enLinea">
+                                    {{'MODO_EDICION' | translate}}</p>
+                                <i class=" material-icons font-blanca  float-right  margin-left-7">clear</i>
+                            </div>
+                            <div class="center-div">
+                                <p class="font-blanca tam-letra-13 diplay-enLinea">
+                                    {{'ARRASTRE_COLUMNAS' | translate}}</p>
+                            </div>
+
+                            <!-- seleccion de tabla -->
+                            <div class="input-field col s12 sin_marginTop font-blanca ">
+                                <p class="tam-letra-13 font-blanca"> {{'SELECT_TABLA' | translate}}</p>
+                                <mat-select [(ngModel)]="selectTable"
+                                            (selectionChange)="changeSelectTable($event)"
+                                            name="table"
+                                            id="table"
+                                            class="border-gris">
+                                    <mat-option *ngFor="let tabla of tablas"
+                                                [value]="tabla.nomb_tabla">
+                                        {{tabla.nombre}}
+                                    </mat-option>
+                                </mat-select>
+                            </div>
+                            <!-- lista de columnas -->
+                            <div class="margin-top-71">
+
+                                <!-- drag and drop de las columnas -->
+                                <div class="container-columns ">
+
+                                    <div cdkDropList
+                                         #columnasList="cdkDropList"
+                                         [cdkDropListData]="columnas"
+                                         [cdkDropListConnectedTo]="[ejexList,exjeyList]"
+                                         class="list-columns"
+                                         (cdkDropListDropped)="drop($event, 'columnasList')">
+                                        <div class="box-columns"
+                                             *ngFor="let item of columnas"
+                                             cdkDrag>{{item}}</div>
+                                    </div>
+                                </div>
+                                <!-- drag and drop de los ejes -->
+
+                                <!-- ejes -->
+
+                                <div class="container-columns ">
+                                    <p class="tam-letra-13 font-blanca">{{'EJEX' | translate}}:</p>
+
+                                    <div cdkDropList
+                                         #ejexList="cdkDropList"
+                                         [cdkDropListData]="ejex"
+                                         [cdkDropListConnectedTo]="[columnasList, exjeyList, areaDrop]"
+                                         class="list-columns-x "
+                                         (cdkDropListDropped)="drop($event, 'X')">
+                                        <div class="box-columns"
+                                             *ngFor="let item of ejex; let i = index"
+                                             cdkDrag>
+                                            <p class="font-blanca style-p-oper">{{item}}</p>
+                                            <mat-select (selectionChange)="changeSelectOperationEjex($event, i)"
+                                                        [(ngModel)]="selectOperacionX"
+                                                        name="operation"
+                                                        id="operationX"
+                                                        class="style-select-operation">
+                                                <mat-option *ngFor="let op of operacion"
+                                                            [value]="op.id">
+                                                    {{op.nombre}}
+                                                </mat-option>
+                                            </mat-select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="container-columns ">
+                                    <p class="tam-letra-13 font-blanca">{{'EJEY' | translate}}:</p>
+                                    <div cdkDropList
+                                         #exjeyList="cdkDropList"
+                                         [cdkDropListData]="ejey"
+                                         [cdkDropListConnectedTo]="[columnasList,ejexList, areaDrop]"
+                                         class="list-columns"
+                                         (cdkDropListDropped)="drop($event, 'Y')">
+                                        <div class="box-columns"
+                                             *ngFor="let item of ejey; let i = index"
+                                             cdkDrag>
+                                            <p class="font-blanca style-p-oper">{{item}}</p>
+                                            <mat-select (selectionChange)="changeSelectOperationEjey($event, i)"
+                                                        [(ngModel)]="selectOperacionY"
+                                                        name="operation"
+                                                        id="operationY"
+                                                        class="style-select-operation">
+                                                <mat-option *ngFor="let op of operacionY"
+                                                            [value]="op.id">
+                                                    {{op.nombre}}
+                                                </mat-option>
+                                            </mat-select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- fin  ejes -->
+                            </div>
+                            <!-- fin  columnas -->
+                            <!-- tipos de graficas -->
+                            <div class="margin-top-60_m">
+                                <p class="tam-letra-13 font-blanca">{{'TIPO_GRAFICO' | translate}}:</p>
+                                <div class="style-box-scroll">
+                                    <ul class="collapsible menu-collapsible-padre">
+                                        <!-- grafica de barras -->
+                                        <li>
+                                            <div class="collapsible-header menu-collapsible">
+                                                <div id="icono-barras"></div>
+                                                <div class="margin-top-menos-10">
+                                                    <p class="font-blanca tam-letra-13">{{'GRAFICO_BARRAS' | translate}}</p>
+                                                </div>
+                                            </div>
+                                            <div class="collapsible-body style-box-graficas">
+                                                <section class="style-body-radio">
+
+                                                    <mat-radio-group name="tiposGraficas"
+                                                                     (change)="cambiaTipo($event)"
+                                                                     [(ngModel)]="selectGraphType"
+                                                                     class="diplay-block">
+                                                        <mat-radio-button class="style-radio-grafica"
+                                                                          value="bar">Barra</mat-radio-button>
+                                                        <mat-radio-button class="style-radio-grafica"
+                                                                          value="otra">Otra</mat-radio-button>
+                                                    </mat-radio-group>
+                                                </section>
+                                            </div>
+                                        </li>
+                                        <!--  fin grafica de barras -->
+                                        <!-- grafica de lineas -->
+                                        <li>
+                                            <div class="collapsible-header menu-collapsible">
+                                                <div id="icono-lineas"></div>
+                                                <div class="margin-top-menos-10">
+                                                    <p class="font-blanca tam-letra-13">{{'GRAFICO_LINEAS' | translate}}</p>
+                                                </div>
+                                            </div>
+                                            <div class="collapsible-body style-box-graficas">
+                                                <section class="style-body-radio">
+
+                                                    <mat-radio-group name="tiposGraficas"
+                                                                     (change)="cambiaTipo($event)"
+                                                                     [(ngModel)]="selectGraphType"
+                                                                     class="diplay-block">
+                                                        <mat-radio-button class="style-radio-grafica"
+                                                                          value="line">Linea</mat-radio-button>
+                                                        <mat-radio-button class="style-radio-grafica"
+                                                                          value="lineInterPol">Linea Interpolada</mat-radio-button>
+                                                        <mat-radio-button class="style-radio-grafica"
+                                                                          value="lineArea">Area</mat-radio-button>
+
+                                                    </mat-radio-group>
+                                                </section>
+                                            </div>
+                                        </li>
+                                        <!-- fin grafica de lineas -->
+                                        <!-- grafica de sectores -->
+
+                                        <li>
+                                            <div class="collapsible-header menu-collapsible">
+                                                <div id="icono-sectores"></div>
+                                                <div class="margin-top-menos-10">
+                                                    <p class="font-blanca tam-letra-13">{{'GRAFICO_SECTORES' | translate}}</p>
+                                                </div>
+                                            </div>
+                                            <div class="collapsible-body style-box-graficas">
+                                                <section class="style-body-radio">
+
+                                                    <mat-radio-group name="tiposGraficas"
+                                                                     (change)="cambiaTipo($event)"
+                                                                     [(ngModel)]="selectGraphType"
+                                                                     class="diplay-block">
+                                                        <mat-radio-button class="style-radio-grafica"
+                                                                          value="pie">Torta</mat-radio-button>
+                                                        <mat-radio-button class="style-radio-grafica"
+                                                                          value="doughnut">Rosquilla</mat-radio-button>
+                                                        <mat-radio-button class="style-radio-grafica"
+                                                                          value="radar">Radar</mat-radio-button>
+
+
+                                                    </mat-radio-group>
+                                                </section>
+                                            </div>
+                                        </li>
+                                        <!-- fin grafica de sectores -->
+                                        <!-- grafica de dispersion -->
+
+                                        <li>
+                                            <div class="collapsible-header menu-collapsible">
+                                                <div id="icono-sectores"></div>
+                                                <div class="margin-top-menos-10">
+                                                    <p class="font-blanca tam-letra-13">otra</p>
+                                                </div>
+                                            </div>
+                                            <div class="collapsible-body">
+                                                <span>otra</span>
+                                            </div>
+                                        </li>
+                                        <!-- fin grafica de dispersion -->
+                                        <!-- grafica de area -->
+                                        <!-- 
+                                        <li>
+                                            <div class="collapsible-header menu-collapsible">
+                                                <div id="icono-sectores"></div>
+                                                <div class="margin-top-menos-10">
+                                                    <p class="font-blanca tam-letra-13">otra</p>
+                                                </div>
+                                            </div>
+                                            <div class="collapsible-body">
+                                                <span>otra</span>
+                                            </div>
+                                        </li> -->
+                                        <!-- fin grafica de area -->
+                                        <!-- grafica de maya -->
+
+                                        <!-- <li>
+                                            <div class="collapsible-header menu-collapsible">
+                                                <div id="icono-sectores"></div>
+                                                <div class="margin-top-menos-10">
+                                                    <p class="font-blanca tam-letra-13">otra</p>
+                                                </div>
+                                            </div>
+                                            <div class="collapsible-body">
+                                                <span>otra</span>
+                                            </div>
+                                        </li> -->
+                                        <!-- fin grafica de maya -->
+
+                                    </ul>
+                                </div>
+                            </div>
+                            <div>
+                                <a class="waves-effect waves-light btn font-back-azul-oscuro style-btn-grah tam-letra-13"
+                                   (click)="getInfo()">
+                                    <i class="material-icons left"></i>{{'GENERAR_GRAFICA' | translate}}</a>
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <!-- fin contenio panel interno -->
+
+                </mat-sidenav>
+
+
+                <!-- contenido -->
+                <mat-sidenav-content [(ngModel)]="opened"
+                                     class="fondo-degrade-azul">
+                    <div class="col s12 center">
+
+                        <div style="height: 56px;">
+                            <div class="float-right padding-4">
+                                <a (click)="nuevaGrafica(sidenav3)"
+                                   class="waves-effect waves-light btn back-gris-btn">
+                                    <i class="material-icons left">add</i>{{'CREAR_GRAFICA' | translate}}</a>
+                            </div>
+                        </div>
+                        <!-- tabs -->
+                        <div cdkDropList
+                             #areaDrop="cdkDropList"
+                             [cdkDropListData]="trashColumns"
+                             [cdkDropListConnectedTo]="[ejexList, exjeyList]"
+                             (cdkDropListDropped)="dropEje($event)"
+                             class="style-box-tabs back-azul-oscuro">
+                            <ng-container *ngIf="(asyncTabs ) === null || (asyncTabs.length ) ==0">
+                                <p class="font-blanca">{{'SIN_GRAFICA' | translate}}</p>
+                            </ng-container>
+
+                            <mat-tab-group [selectedIndex]="selected.value"
+                                           (selectedIndexChange)="cambioTab($event)">
+                                <mat-tab *ngFor="let tab of asyncTabs; let i = index ">
+                                    <ng-template id="tablas"
+                                                 mat-tab-label>
+                                        <div class="justific">
+                                            <p>{{tab.nombre}}
+                                            </p>
+                                            <a class=' style-more1'
+                                               mat-button
+                                               (click)="closeTabs(i)">
+                                                <i class="material-icons  tam-letra-18  font-blanca">close</i>
+                                            </a>
+                                        </div>
+
+                                    </ng-template>
+                                    <div *ngIf="!tab.creando"
+                                         style="height: 20px;">
+                                    </div>
+
+                                    <div *ngIf="tab.creando"
+                                         class="input-field col s12 m6 tamaño-upload  center-div">
+                                        <input name="nombre_grafica"
+                                               type="text"
+                                               [(ngModel)]="nameGraph"
+                                               (change)="changeNomGrafica(i)"
+                                               class="validate font-blanca">
+                                        <label for="nombre_grafica">{{'NOMBRE_GRAFICA' | translate}}*</label>
+                                    </div>
+                                    <div class="m-5 style_canva">
+                                        <div class="card  col-md-6 offset-md-3">
+
+                                            <canvas id="lineCanvas_{{i}}"></canvas>
+
+                                        </div>
+
+                                    </div>
+
+                                    <mat-form-field class="example-full-width">
+                                        <textarea [(ngModel)]="descGrafico"
+                                                  matInput
+                                                  class="font-blanca"
+                                                  placeholder="Deja una descripción de la grafica"></textarea>
+                                    </mat-form-field>
+
+                                    <div class="margin-top-9">
+                                        <a *ngIf="tab.creando"
+                                           (click)="guardarGrafica(i, sidenav3)"
+                                           class="waves-effect font-back-azul waves-light btn">
+                                            <i class="material-icons left"></i>{{'GUARDAR_GRAFICA' | translate}}</a>
+                                    </div>
+                                    <div class="margin-top-9">
+                                        <a *ngIf="!tab.creando"
+                                           (click)="editarGrafica(i, sidenav3)"
+                                           class="waves-effect font-back-azul waves-light btn">
+                                            <i class="material-icons left"></i>{{'EDITAR_GRAFICA' | translate}}</a>
+                                    </div>
+                                    <div>
+
+                                    </div>
+                                </mat-tab>
+                            </mat-tab-group>
+
+                        </div>
+
+
+
+
+                    </div>
+                </mat-sidenav-content>
+            </mat-sidenav-container>
+        </div>
+    </mat-sidenav-content>
+</mat-sidenav-container>

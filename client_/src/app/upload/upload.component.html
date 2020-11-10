@@ -1,0 +1,172 @@
+<div class="conteiner">
+    <div class="card">
+        <div class="card-contend">
+            <div class="row">
+                <div class="input-field col s12 m6 l4">
+
+                    <input type="file"
+                           id="selectFile"
+                           name="selectFile"
+                           class="btn btn-success"
+                           (change)="fileUploads($event)">
+                </div>
+                <div class="input-field col s12 m6 l4">
+
+                    <a class="waves-effect waves-light btn"
+                       (click)="cargarDatos()"><i class="material-icons left"></i>Cargar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- <div class="row">
+        <table class="striped  responsive-table">
+            <thead>
+                <tr class="
+               fondo-head">
+                    <th class="border-head"
+                        *ngFor="let head of header; index as i">
+
+                        <input class="check-head"
+                               checked="checked"
+                               type="checkbox"
+                               (change)="seleccion(i)" />
+
+                        {{head}}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of datos">
+                    <td *ngFor="let value of item">
+                        {{value}}</td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div> -->
+
+    <div class="mat-elevation-z8 conteiner">
+        <div class="row">
+            <div class="col s12 m4 ">
+                <label>Nombre de la Tabla</label>
+                <input matInput
+                       required
+                       [(ngModel)]="nameTable"
+                       placeholder="Nombre de la Tabla">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s12 m4 ">
+                <input matInput
+                       (keyup)="applyFilter($event.target.value)"
+                       placeholder="Buscar">
+            </div>
+        </div>
+        <div>
+            <table mat-table
+                   [dataSource]="dataSource"
+                   matSort
+                   class="mat-elevation-z8">
+
+
+                <ng-container *ngFor="let disCol of header; let colIndex = index"
+                              matColumnDef="{{disCol}}">
+                    <mat-header-cell *matHeaderCellDef> <input class="check-head"
+                               checked="checked"
+                               type="checkbox"
+                               (change)="seleccion(colIndex)" />{{disCol}} </mat-header-cell>
+                    <mat-cell *matCellDef="let element "> {{element[colIndex]}}
+                    </mat-cell>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+            </table>
+
+            <mat-paginator [pageSizeOptions]="[5, 10, 20]"
+                           showFirstLastButtons></mat-paginator>
+        </div>
+
+
+    </div>
+
+    <div class="card">
+        <div class="card-contend">
+            <div class="row">
+
+                <div class="input-field col s12 m6 l4">
+
+                    <a class="waves-effect waves-light btn"
+                       (click)="guardarTabla()"><i class="material-icons left"></i>Guardar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="iframe-drag-bounds"
+         #dragBounds>
+        <div class="iframe-resize-container card"
+             ngResizable
+             rzHandles="n,s,e,w,se,sw"
+             ngDraggable
+             [handle]="dragHandle2"
+             [bounds]="dragBounds"
+             [inBounds]="true"
+             [preventDefaultEvent]="true">
+
+
+            <div #dragHandle2
+                 class="  iframe-content "
+                 scrolling="no"
+                 width="100%">
+                <canvas #lineCanvas></canvas>
+
+            </div>
+
+        </div>
+        <div class="iframe-resize-container card"
+             ngResizable
+             rzHandles="n,s,e,w,se,sw"
+             ngDraggable
+             [handle]="dragHandle"
+             [bounds]="dragBounds"
+             [inBounds]="true"
+             [preventDefaultEvent]="true">
+
+
+            <div #dragHandle
+                 class="  iframe-content"
+                 scrolling="no"
+                 width="100%">
+                <canvas #lineCanvas2></canvas>
+
+            </div>
+
+        </div>
+    </div>
+
+
+
+
+</div>
+
+<div class="container">
+    <div class="col-sm-12"
+         style="margin-bottom: 20px;">
+
+    </div>
+</div>
+<div [ngGrid]="gridConfig">
+
+    <div *ngFor="let box of boxes; let i = index"
+         [(ngGridItem)]="box.config"
+         (onItemChange)="updateItem(i, $event)"
+         (onResize)="onResize(i, $event)"
+         (onDrag)="onDrag(i, $event)"
+         class="card">
+        <div class="handle">{{box.nombre}}</div>
+
+    </div>
+
+</div>

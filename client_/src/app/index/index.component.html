@@ -1,0 +1,118 @@
+<div class="progress" *ngIf="progress">
+    <div class="indeterminate"></div>
+</div>
+<div class="row">
+    <div class="col s2">
+        <div class="input-field col s12">
+            <select [(ngModel)]="tableSelected">
+
+                <option value="medical_offices">medical_offices</option>
+                <option value="appointment_dates">appointment_dates</option>
+                <option value="orders">orders</option>
+            </select>
+            <label>Seleccione Tabla</label>
+        </div>
+    </div>
+    <div class="col s2">
+        <div class="input-field col s12">
+            <select [(ngModel)]="ejeXSelected">
+                <option value="" disabled selected>Seleccione X</option>
+                <option *ngFor="let campo of campos" [value]="campo">{{campo}}</option>
+            </select>
+            <label>Seleccione Eje X</label>
+        </div>
+    </div>
+    <div class="col s2">
+        <div class="input-field col s12">
+            <select [(ngModel)]="ejeYSelected">
+                <option value="" disabled selected>Seleccione Eje Y</option>
+                <option *ngFor="let campo of campos" [value]="campo">{{campo}}</option>
+            </select>
+            <label>Seleccione Eje Y</label>
+        </div>
+    </div>
+    <div class="col s2">
+        <div class="input-field col s12">
+            <select [(ngModel)]="operacionSelected">
+                <option value="" disabled selected>Seleccione Operacion</option>
+                <option value="COUNT">CONTEO</option>
+                <option value="SUM">SUMA</option>
+                <option value="AVG">PROMEDIO</option>
+            </select>
+            <label>Seleccione Operacion</label>
+        </div>
+    </div>
+    <div class="col s2">
+        <div class="input-field col s12">
+            <select [(ngModel)]="agrupacionSelected">
+                <option value="" disabled selected>Seleccione Agrupación</option>
+                <option *ngFor="let campo of campos" [value]="campo">{{campo}}</option>
+            </select>
+            <label>Seleccione Agrupacion</label>
+        </div>
+    </div>
+    <div class="col s2">
+        <div class="input-field col s12">
+            <select [(ngModel)]="tipoAgrupacionSelected">
+                <option value="" disabled selected>Seleccione Tipo de Agrupacion</option>
+                <option value="MONTH">MES</option>
+                <option value="DAY">DIA SEMANA</option>
+                <option value="DAYM">DIA MES</option>
+                <option value="YEAR">AÑO</option>
+            </select>
+            <label>Tipo de Agrupacion</label>
+        </div>
+    </div>
+
+
+</div>
+<div class="row">
+    <div class="col s2">
+        <div class="input-field col s12">
+
+            <a class="waves-effect waves-light btn" (click)="consultarCampos()">
+                <i class="material-icons left"></i>Cargar Campos</a>
+        </div>
+    </div>
+    <div class="col s2">
+        <div class="input-field col s12">
+
+            <a class="waves-effect waves-light btn" (click)="consultarInfo()">
+                <i class="material-icons left"></i>Graficar</a>
+        </div>
+    </div>
+    <div class="col s2">
+        <div class="input-field col s12">
+            <a class="waves-effect waves-light btn" (click)="guardarDatosGrafica()">
+                <i class="material-icons left"></i>Guardar grafica</a>
+        </div>
+    </div>
+</div>
+
+<!-- <div class="row">
+    <table>
+        <thead>
+            <tr>
+                <th *ngFor="let head of items[0] | keys">
+                    {{head}}</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of info">
+                <td *ngFor="let list of item | keys">{{item[list]}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div> -->
+
+<div class="row">
+    <div class="container">
+        <div class="m-5">
+            <div class="card col-md-6 offset-md-3">
+                <canvas #lineCanvas></canvas>
+
+            </div>
+        </div>
+
+    </div>
+</div>

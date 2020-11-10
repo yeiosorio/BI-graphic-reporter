@@ -1,0 +1,13 @@
+<div class="input-field col s12 sin_marginTop font-blanca ">
+  <p class="tam-letra-13 font-blanca"> {{'SELECT_TABLA' | translate}}</p>
+  <mat-select [(ngModel)]="selectTable"
+              (selectionChange)="changeSelectTable($event)"
+              name="table"
+              id="table"
+              class="border-gris">
+      <mat-option *ngFor="let tabla of tablas"
+                  [value]="tabla.nomb_tabla">
+          {{tabla.nombre}}
+      </mat-option>
+  </mat-select>
+</div>

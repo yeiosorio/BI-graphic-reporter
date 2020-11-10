@@ -1,0 +1,332 @@
+<div class="row bk-video">
+  <video id="bgvid" playsinline autoplay muted loop>
+    <!-- 
+      - Video needs to be muted, since Chrome 66+ will not autoplay video with sound.
+      WCAG general accessibility recommendation is that media such as background video play through only once. Loop turned on for the purposes of illustration; if removed, the end of the video will fade in the same way created by pressing the "Pause" button  -->
+    <source src="assets/media/video.mp4" type="video/mp4" />
+    <source src="assets/media/video.ogg" type="video/ogg" />
+  </video>
+  <div class="container">
+    <div class="row">
+      <div class="col s12 m12">
+        <div class="col s12 xl6">
+          <div class="textos">
+            <p class="gl-color center-align" style="font-size:45px;">
+              <b class="green-glBi-claro">GL</b>Reports
+            </p>
+            <p class="center">
+              <i> {{ "ESLOGAN" | translate }}</i>
+            </p>
+          </div>
+        </div>
+
+        <div class="col s12 xl6">
+          <div class="card margin-top-20 tab_login">
+            <mat-tab-group dynamicHeight mat-align-tabs="center">
+              <mat-tab center label="{{ 'REGISTRO' | translate }}">
+                <div class="content">
+                  <h5>
+                    <b>{{ "BIENVENIDO" | translate }}</b>
+                  </h5>
+                  <p>{{ "REGISTRATE" | translate }}</p>
+                  <form
+                    #registerForm="ngForm"
+                    (ngSubmit)="registrar(registerForm)"
+                  >
+                    <div class="row">
+                      <input
+                        #id="ngModel"
+                        [(ngModel)]="usuarioService.selecUsuario.id"
+                        name="id"
+                        type="hidden"
+                        class="validate"
+                      />
+                      <input
+                        #rol_id="ngModel"
+                        [(ngModel)]="usuarioService.selecUsuario.rol_id"
+                        name="rol_id"
+                        type="hidden"
+                        class="validate"
+                      />
+                      <input
+                        #observacion="ngModel"
+                        [(ngModel)]="usuarioService.selecUsuario.observacion"
+                        name="observacion"
+                        type="hidden"
+                        class="validate"
+                      />
+                      <div
+                        class="input-field col s12 m6"
+                        style="margin-bottom: -3px;"
+                      >
+                        <input
+                          placeholder="{{ 'NOMBRE' | translate }}"
+                          name="nombre"
+                          #nombre="ngModel"
+                          [(ngModel)]="usuarioService.selecUsuario.nombre"
+                          type="text"
+                          class="validate"
+                          required
+                        />
+                        <label for="first_name">{{
+                          "NOMBRE" | translate
+                        }}</label>
+                        <div *ngIf="nombre.touched && !nombre.valid">
+                          <div
+                            class="mat-error"
+                            style="font-size: 12px;"
+                            *ngIf="nombre.hasError('required')"
+                          >
+                            {{ "REGISTRATE_NOMBRE_REQUERDIO" | translate }}
+                          </div>
+                        </div>
+                      </div>
+                      <div class="input-field col s12 m6">
+                        <input
+                          placeholder="{{ 'APELLIDO' | translate }}"
+                          #apellido="ngModel"
+                          [(ngModel)]="usuarioService.selecUsuario.apellido"
+                          name="apellido"
+                          type="text"
+                          class="validate"
+                          required
+                        />
+                        <label for="first_name">{{
+                          "APELLIDO" | translate
+                        }}</label>
+                        <div *ngIf="apellido.touched && !apellido.valid">
+                          <div
+                            class="mat-error"
+                            style="font-size: 12px;"
+                            *ngIf="apellido.hasError('required')"
+                          >
+                            {{ "REGISTRATE_APELLIDO_REQUERDIO" | translate }}
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        class="input-field col s12 m6"
+                        style="margin-bottom: -3px;"
+                      >
+                        <input
+                          placeholder="{{ 'IDENTIFICACION' | translate }}"
+                          #identificacion="ngModel"
+                          [(ngModel)]="
+                            usuarioService.selecUsuario.identificacion
+                          "
+                          name="identificacion"
+                          type="text"
+                          class="validate"
+                          required
+                        />
+                        <label for="first_name">{{
+                          "IDENTIFICACION" | translate
+                        }}</label>
+                        <div
+                          *ngIf="
+                            identificacion.touched && !identificacion.valid
+                          "
+                        >
+                          <div
+                            class="mat-error"
+                            style="font-size: 12px;"
+                            *ngIf="identificacion.hasError('required')"
+                          >
+                            {{
+                              "REGISTRATE_IDENTIFICACION_REQUERDIO" | translate
+                            }}
+                          </div>
+                        </div>
+                      </div>
+                      <div class="input-field col s12 m6">
+                        <input
+                          placeholder="{{ 'CORREO' | translate }}"
+                          #correo="ngModel"
+                          [(ngModel)]="usuarioService.selecUsuario.correo"
+                          name="correo"
+                          type="email"
+                          class="validate"
+                          required
+                        />
+                        <label for="first_name">{{
+                          "CORREO" | translate
+                        }}</label>
+                        <div *ngIf="correo.touched && !correo.valid">
+                          <div
+                            class="mat-error"
+                            style="font-size: 12px;"
+                            *ngIf="correo.hasError('required')"
+                          >
+                            {{ "REGISTRATE_CORREO_REQUERDIO" | translate }}
+                          </div>
+                        </div>
+                      </div>
+                      <div class="input-field col s12 m6">
+                        <input
+                          placeholder="{{ 'USERNAME' | translate }}"
+                          #nomb_usuario="ngModel"
+                          [(ngModel)]="usuarioService.selecUsuario.nomb_usuario"
+                          name="nomb_usuario"
+                          type="text"
+                          class="validate"
+                          required
+                        />
+                        <label for="first_name">{{
+                          "USERNAME" | translate
+                        }}</label>
+                        <div
+                          *ngIf="nomb_usuario.touched && !nomb_usuario.valid"
+                        >
+                          <div
+                            class="mat-error"
+                            style="font-size: 12px;"
+                            *ngIf="nomb_usuario.hasError('required')"
+                          >
+                            {{
+                              "REGISTRATE_NOMBREUSUARIO_REQUERDIO" | translate
+                            }}
+                          </div>
+                        </div>
+                      </div>
+                      <div class="input-field col s12 m6">
+                        <input
+                          placeholder="{{ 'PASSWORD' | translate }}"
+                          #contrasena="ngModel"
+                          [(ngModel)]="usuarioService.selecUsuario.contrasena"
+                          name="contrasena"
+                          type="password"
+                          class="validate"
+                          required
+                        />
+                        <label for="first_name">{{
+                          "PASSWORD" | translate
+                        }}</label>
+                        <div *ngIf="contrasena.touched && !contrasena.valid">
+                          <div
+                            class="mat-error"
+                            style="font-size: 12px;"
+                            *ngIf="contrasena.hasError('required')"
+                          >
+                            {{ "REGISTRATE_CONTRASENA_REQUERDIO" | translate }}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- terminos y condiciones -->
+                    <p class="center ">
+                      <label>
+                        <input class="tam-letra-10" type="checkbox" />
+                        <span
+                          ><b class="tam-letra-10">{{
+                            "TERMINOS_CONDICIONES" | translate
+                          }}</b>
+                        </span>
+                      </label>
+                    </p>
+                    <!-- fin terminos y condiciones -->
+                    
+                  </form>
+                </div>
+              </mat-tab>
+              <mat-tab center label="{{ 'INICIAR_SESION' | translate }}">
+                <div class="content">
+                  <h5>
+                    <b>{{ "BIENVENIDO" | translate }}</b>
+                  </h5>
+                  <div class="row">
+                    <div class="input-field col s12">
+                      <input
+                        name="nomb_usuario"
+                        [(ngModel)]="user.correo"
+                        type="email"
+                        class="validate"
+                        class="validate"
+                        id="first_name"
+                        required
+                      />
+                      <label for="first_name">{{
+                        "USERNAME" | translate
+                      }}</label>
+                      <div *ngIf="correo.touched && !correo.valid">
+                        <div
+                          class="mat-error"
+                          *ngIf="correo.hasError('required')"
+                        >
+                          <!-- {{'REGISTRATE_NOMBREUSUARIO_REQUERDIO' | translate}} -->
+                        </div>
+                      </div>
+                    </div>
+                    <div class="input-field col s12 ">
+                      <input
+                        name="contrasena"
+                        [(ngModel)]="user.contrasena"
+                        type="password"
+                        class="validate"
+                        required
+                      />
+                      <label for="first_name">{{
+                        "PASSWORD" | translate
+                      }}</label>
+                      <div *ngIf="contrasena.touched && !contrasena.valid">
+                        <div
+                          class="mat-error"
+                          style="font"
+                          *ngIf="contrasena.hasError('required')"
+                        >
+                          <!-- {{'REGISTRATE_CONTRASENA_REQUERDIO' | translate}} -->
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <p class="center">
+                    <button
+                      class="waves-effect waves-light btn back-green-glBI-oscuro tam-200"
+                      (click)="autenticar(user)"
+                    >
+                      {{ "INGRESAR" | translate }}
+                    </button>
+                  </p>
+                </div>
+              </mat-tab>
+            </mat-tab-group>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script></script>
+  </div>
+</div>
+
+<!-- SECCION CARACTERISTICAS INICIO -->
+<div class="container">
+  <div class="row">
+    <div class="col s12">
+      <h3 class="center caracteristicas upperCase">
+        {{ "CARACTERISTICAS" | translate }}
+      </h3>
+    </div>
+    <div class="col s12 carac-margin">
+      <div class="col s12 m6 l3">
+        <div class="imagen1"></div>
+        <p class="center">{{ "CARACTERISTICA-1" | translate }}</p>
+      </div>
+      <div class="col s12 m6 l3">
+        <div class="imagen2"></div>
+        <p class="center">{{ "CARACTERISTICA-2" | translate }}</p>
+      </div>
+      <div class="col s12 m6 l3">
+        <div class="imagen3"></div>
+        <p class="center">{{ "CARACTERISTICA-3" | translate }}</p>
+      </div>
+      <div class="col s12 m6 l3">
+        <div class="imagen4"></div>
+        <p class="center">{{ "CARACTERISTICA-4" | translate }}</p>
+      </div>
+    </div>
+    <div class="col s12">
+      <h6 class="center">{{ "CARACTERISTICA-5" | translate }}</h6>
+    </div>
+  </div>
+</div>
+<!-- SECCION CARACTERISTICAS FINAL -->

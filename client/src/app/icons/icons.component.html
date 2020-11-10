@@ -1,0 +1,198 @@
+<mat-sidenav-container class="box-container ">
+  <!--Inicio Menu de Modo edición-->
+  <mat-sidenav
+    opened="true"
+    mode="side"
+    class=" back-azul-azul-claro"
+    *ngIf="openIcons.length > 0"
+  >
+    <!--Inicio menu icono-->
+    <div class="row tam-row-lateral">
+      <div class="col-s12 m2  back-azul-azul-oscuro style-box-edit ">
+        <div>
+          <p class="font-blanca tam-letra-13 diplay-enLinea">
+            {{ "MODO_EDICION" | translate }}
+          </p>
+          <i
+            class=" material-icons font-blanca  float-right  margin-left-7 pointer"
+            >close
+          </i>
+        </div>
+        <!-- seleccion de tabla -->
+        <div
+          class="input-field col s12 sin_marginTop font-blanca "
+          [ngClass]="
+            openIcons[tabSelect].steateCreation === 'Created'
+              ? 'disabledDiv'
+              : ''
+          "
+        >
+          <p class="tam-letra-13 font-blanca">
+            {{ "SELECT_TABLA" | translate }}
+          </p>
+          <mat-select
+            [(ngModel)]="openIcons[this.tabSelect].field.table"
+            (selectionChange)="loadColumns()"
+            name="table"
+            id="table"
+            class="border-gris"
+          >
+            <mat-option *ngFor="let table of tables" [value]="table.nomb_tabla">
+              {{ table.nombre }}
+            </mat-option>
+          </mat-select>
+        </div>
+        <!-- lista de columnas -->
+        <div class="margin-top-71">
+          <!-- drag and drop de las columnas -->
+          <div class="container-columns ">
+            <div #columnasList class="list-columns">
+              <mat-radio-group
+                [(ngModel)]="openIcons[this.tabSelect].field.ejeValue"
+              >
+                <mat-radio-button
+                  class="box-columns"
+                  *ngFor="let item of fieldsTable[this.tabSelect]"
+                  [value]="item"
+                  [checked]="
+                    item.nombre ===
+                    openIcons[this.tabSelect].field.ejeValue.nombre
+                  "
+                  (click)="loadOperation(item.tipo)"
+                >
+                  {{ item.nombre }}
+                </mat-radio-button>
+              </mat-radio-group>
+            </div>
+          </div>
+        </div>
+        <div class="input-field col s12  font-blanca ">
+          <mat-select
+            [(ngModel)]="openIcons[tabSelect].field.ejeValue.operacion"
+            name="operation"
+            id="operationX"
+            class="border-gris"
+          >
+            <mat-option *ngFor="let opt of operationList" [value]="opt.id">
+              {{ opt.nombre }}
+            </mat-option>
+          </mat-select>
+          <mat-checkbox [(ngModel)]="openIcons[tabSelect].onlyText"
+            >Solo texto</mat-checkbox
+          >
+          <button
+            class="waves-effect waves-light btn font-back-azul-oscuro tam-letra-13"
+            (click)="getInfo()"
+          >
+            <i class="material-icons left"></i>HACER CALCULO
+          </button>
+        </div>
+      </div>
+    </div>
+  </mat-sidenav>
+  <!--Fin Menu de Modo edición-->
+
+  <mat-sidenav-content class="fondo-degrade-azul">
+    <div class="col s12 center">
+      <div style="height: 56px;">
+        <div
+          class="float-right padding-4"
+        >
+          <a
+            (click)="createIcon()"
+            class="waves-effect waves-light btn back-gris-btn"
+          >
+            <i class="material-icons left">add</i
+            >Crear Icono</a
+          >
+        </div>
+      </div>
+    </div>
+    <!-- tabs -->
+    <div class="style-box-tabs back-azul-oscuro">
+      <ng-container *ngIf="openIcons.length === 0">
+        <p class="font-blanca">Seleccione un icono o cree uno nuevo
+        </p>
+      </ng-container>
+      <mat-tab-group [(selectedIndex)]="tabSelect">
+        <mat-tab
+          *ngFor="let icon of openIcons; let i = index"
+          (click)="changeTab(i)"
+        >
+          <ng-template mat-tab-label>
+            <div class="justific">
+              <p>
+                {{ icon.name === "" ? "nuev o icono " + i : icon.name }}
+              </p>
+              <a (click)="closeGraph(i)">
+                <mat-icon class="material-icons style-more1">close</mat-icon>
+              </a>
+            </div>
+          </ng-template>
+
+          <div class="input-field col s12 m6 tamaño-upload  center-div">
+            <input
+              name="icon_name"
+              type="text"
+              [(ngModel)]="icon.name"
+              class="validate font-blanca"
+            />
+            <label for="icon_name">{{ "NOMBRE_GRAFICA" | translate }}*</label>
+          </div>
+          <div class="m-5 style_canva" *ngIf="icon.image !== undefined">
+            <div class=" card col-md-6 offset-md-3">
+              <!-- drag and drop de las columnas -->
+              <div #columnasList class="list-images" *ngIf="!icon.onlyText">
+                <mat-radio-group
+                  aria-labelledby="box-columns"
+                  class="example-radio-group"
+                  [(ngModel)]="icon.image.id"
+                >
+                  <mat-radio-button
+                    *ngFor="let image of imageList"
+                    [value]="image.id"
+                  >
+                    <img
+                      width="175"
+                      height="250"
+                      mat-card-image
+                      src="{{ image.url }}"
+                    />
+                  </mat-radio-button>
+                </mat-radio-group>
+              </div>
+              <textarea
+                matInput
+                class="text-icon"
+                [(ngModel)]="icon.textValue"
+              ></textarea>
+              <!-- drag and drop de los ejes -->
+            </div>
+          </div>
+          <mat-form-field class="example-full-width">
+            <textarea
+              [(ngModel)]="icon.description"
+              matInput
+              class="font-blanca"
+              placeholder="Deja una descripción del icono"
+            ></textarea>
+          </mat-form-field>
+
+          <div class="margin-top-9">
+            <button
+              (click)="saveIcon(icon)"
+              class="waves-effect font-back-azul waves-light btn"
+            >
+              <i class="material-icons left"></i
+              >Guardar Icono
+            </button>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+
+      <div class="m-5 style_canva">
+        <div class="card  col-md-6 offset-md-3"></div>
+      </div>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

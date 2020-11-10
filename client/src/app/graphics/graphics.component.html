@@ -1,0 +1,449 @@
+<mat-sidenav-container class="box-container ">
+  <mat-sidenav
+    opened="true"
+    mode="side"
+    class=" back-azul-azul-claro"
+    *ngIf="graficasAbiertas.length > 0"
+  >
+    <!--Inicio menu grafica-->
+    <div class="row tam-row-lateral">
+      <div class="col-s12 m2  back-azul-azul-oscuro style-box-edit ">
+        <div>
+          <p class="font-blanca tam-letra-13 diplay-enLinea">
+            {{ "MODO_EDICION" | translate }}
+          </p>
+          <i
+            class=" material-icons font-blanca  float-right  margin-left-7 pointer"
+            >close
+          </i>
+        </div>
+        <div class="center-div">
+          <p class="font-blanca tam-letra-13 diplay-enLinea">
+            {{ "ARRASTRE_COLUMNAS" | translate }}
+          </p>
+        </div>
+        <!-- seleccion de tabla -->
+        <div
+          class="input-field col s12 sin_marginTop font-blanca "
+          [ngClass]="
+            graficasAbiertas[tabSelect].estadoCreacion === 'Creado'
+              ? 'disabledDiv'
+              : ''
+          "
+        >
+          <p class="tam-letra-13 font-blanca">
+            {{ "SELECT_TABLA" | translate }}
+          </p>
+          <mat-select
+            [(ngModel)]="graficasAbiertas[tabSelect].fieldCDK.selectTable"
+            (selectionChange)="cargarColumnas(tabSelect)"
+            name="table"
+            id="table"
+            class="border-gris"
+          >
+            <mat-option *ngFor="let tabla of tablas" [value]="tabla.nomb_tabla">
+              {{ tabla.nombre }}
+            </mat-option>
+          </mat-select>
+        </div>
+        <!-- lista de columnas -->
+        <div class="margin-top-71">
+          <!-- drag and drop de las columnas -->
+          <div class="container-columns ">
+            <div
+              cdkDropList
+              #columnasList="cdkDropList"
+              [cdkDropListData]="graficasAbiertas[tabSelect].columnas"
+              [cdkDropListConnectedTo]="[ejexList, ejeyList, inicioList]"
+              class="list-columns"
+              (cdkDropListDropped)="drop($event, 'columnasList')"
+              [ngClass]="
+                graficasAbiertas[tabSelect].estadoCreacion === 'Creado'
+                  ? 'disabledDiv'
+                  : ''
+              "
+            >
+              <div
+                class="box-columns"
+                *ngFor="let item of graficasAbiertas[tabSelect].columnas"
+                cdkDrag
+              >
+                {{ item.nombre }}
+              </div>
+            </div>
+          </div>
+          <!-- drag and drop de los ejes -->
+
+          <div class="container-columns ">
+            <p class="tam-letra-13 font-blanca">{{ "EJEX" | translate }}:</p>
+            <div
+              cdkDropList
+              #ejexList="cdkDropList"
+              [cdkDropListData]="graficasAbiertas[tabSelect].fieldCDK.x"
+              class="list-columns-x "
+              [cdkDropListConnectedTo]="[columnasList, ejeyList, inicioList]"
+              (cdkDropListDropped)="drop($event, 'x')"
+              [ngClass]="
+                graficasAbiertas[tabSelect].estadoCreacion === 'Creado'
+                  ? 'disabledDiv'
+                  : ''
+              "
+            >
+              <div
+                class="box-columns"
+                *ngFor="
+                  let item of graficasAbiertas[tabSelect].fieldCDK.x;
+                  let i = index
+                "
+                cdkDrag
+              >
+                <a
+                  (click)="
+                    quitarColumna(graficasAbiertas[tabSelect].fieldCDK.x, i)
+                  "
+                >
+                  <i class="material-icons style-more1">
+                    close
+                  </i>
+                </a>
+                {{ item.nombre }}
+                <mat-select
+                  [(ngModel)]="item.operacion"
+                  name="operation"
+                  id="operationX"
+                  class="style-select-operation"
+                  [disabled]="
+                    graficasAbiertas[tabSelect].estadoCreacion === 'Creado'
+                  "
+                >
+                  <mat-option
+                    *ngFor="let opt of listOperaciones[item.tipo]"
+                    [value]="opt.id"
+                  >
+                    {{ opt.nombre }}
+                  </mat-option>
+                </mat-select>
+              </div>
+            </div>
+          </div>
+
+          <div class="container-columns ">
+            <p class="tam-letra-13 font-blanca">{{ "EJEY" | translate }}:</p>
+            <div
+              cdkDropList
+              #ejeyList="cdkDropList"
+              [cdkDropListData]="graficasAbiertas[tabSelect].fieldCDK.y"
+              class="list-columns"
+              [cdkDropListConnectedTo]="[columnasList, ejexList, inicioList]"
+              (cdkDropListDropped)="drop($event, 'y')"
+              [ngClass]="
+                graficasAbiertas[tabSelect].estadoCreacion === 'Creado'
+                  ? 'disabledDiv'
+                  : ''
+              "
+            >
+              <div
+                class="box-columns"
+                *ngFor="
+                  let item of graficasAbiertas[tabSelect].fieldCDK.y;
+                  let i = index
+                "
+                cdkDrag
+              >
+                <a
+                  (click)="
+                    quitarColumna(graficasAbiertas[tabSelect].fieldCDK.y, i)
+                  "
+                >
+                  <i class="material-icons style-more1">
+                    close
+                  </i>
+                </a>
+                {{ item.nombre }}
+                <mat-select
+                  [(ngModel)]="item.operacion"
+                  name="operation"
+                  id="operationY"
+                  class="style-select-operation "
+                  [disabled]="
+                    graficasAbiertas[tabSelect].estadoCreacion === 'Creado'
+                  "
+                >
+                  <mat-option
+                    *ngFor="let opt of listOperaciones[item.tipo]"
+                    [value]="opt.id"
+                  >
+                    {{ opt.nombre }}
+                  </mat-option>
+                </mat-select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="margin-top-60_m">
+          <p class="tam-letra-13 font-blanca">
+            {{ "TIPO_GRAFICO" | translate }}:
+          </p>
+          <div class="style-box-scroll">
+            <ul class="collapsible menu-collapsible-padre">
+              <!-- grafica de barras -->
+              <li>
+                <div class="collapsible-header menu-collapsible">
+                  <div id="icono-barras"></div>
+                  <div class="margin-top-menos-10">
+                    <p class="font-blanca tam-letra-13">
+                      {{ "GRAFICO_BARRAS" | translate }}
+                    </p>
+                  </div>
+                </div>
+                <div class="style-box-graficas">
+                  <section class="style-body-radio">
+                    <mat-radio-group
+                      [(ngModel)]="
+                        graficasAbiertas[tabSelect].fieldCDK.tipoGrafica
+                      "
+                      name="tiposGraficas"
+                      class="diplay-block"
+                      [disabled]="
+                        disabledItems.barras &&
+                        graficasAbiertas[tabSelect].estadoCreacion === 'Creado'
+                      "
+                    >
+                      <mat-radio-button class="style-radio-grafica" value="bar"
+                        >Barra</mat-radio-button
+                      >
+                      <mat-radio-button class="style-radio-grafica" value="horizontalBar"
+                        >Barra Horizontal</mat-radio-button
+                      >
+                    </mat-radio-group>
+                  </section>
+                </div>
+              </li>
+              <!--  fin grafica de barras -->
+              <!-- grafica de lineas -->
+              <li>
+                <div class="collapsible-header menu-collapsible">
+                  <div id="icono-lineas"></div>
+                  <div class="margin-top-menos-10">
+                    <p class="font-blanca tam-letra-13">
+                      {{ "GRAFICO_LINEAS" | translate }}
+                    </p>
+                  </div>
+                </div>
+                <!--<div class="collapsible-body style-box-graficas">-->
+                <div class="style-box-graficas">
+                  <section class="style-body-radio">
+                    <mat-radio-group
+                      [(ngModel)]="
+                        graficasAbiertas[tabSelect].fieldCDK.tipoGrafica
+                      "
+                      name="tiposGraficas"
+                      class="diplay-block"
+                      [disabled]="
+                        disabledItems.lineas &&
+                        graficasAbiertas[tabSelect].estadoCreacion === 'Creado'
+                      "
+                    >
+                      <mat-radio-button class="style-radio-grafica" value="line"
+                        >Linea</mat-radio-button
+                      >
+                    </mat-radio-group>
+                  </section>
+                </div>
+              </li>
+              <!-- fin grafica de lineas -->
+              <!-- grafica de sectores -->
+
+              <li>
+                <div class="collapsible-header menu-collapsible">
+                  <div id="icono-sectores"></div>
+                  <div class="margin-top-menos-10">
+                    <p class="font-blanca tam-letra-13">
+                      {{ "GRAFICO_SECTORES" | translate }}
+                    </p>
+                  </div>
+                </div>
+                <!--<div class="collapsible-body style-box-graficas">-->
+                <div class="style-box-graficas">
+                  <section class="style-body-radio">
+                    <mat-radio-group
+                      name="tiposGraficas"
+                      class="diplay-block"
+                      [disabled]="
+                        disabledItems.sectores &&
+                        graficasAbiertas[tabSelect].estadoCreacion === 'Creado'
+                      "
+                      [(ngModel)]="
+                        graficasAbiertas[tabSelect].fieldCDK.tipoGrafica
+                      "
+                    >
+                      <mat-radio-button class="style-radio-grafica" value="pie"
+                        >Torta</mat-radio-button
+                      >
+                      <mat-radio-button
+                        class="style-radio-grafica"
+                        value="doughnut"
+                        >Rosquilla</mat-radio-button
+                      >
+                      <mat-radio-button
+                        class="style-radio-grafica"
+                        value="radar"
+                        >Radar</mat-radio-button
+                      >
+                    </mat-radio-group>
+                  </section>
+                </div>
+              </li>
+              <!-- fin grafica de sectores -->
+            </ul>
+          </div>
+        </div>
+        <div>
+          <button
+            class="waves-effect waves-light btn font-back-azul-oscuro style-btn-grah tam-letra-13"
+            [disabled]="
+              disabledItems.botonCrear &&
+              graficasAbiertas[tabSelect].estadoCreacion !== 'Editando'
+            "
+            (click)="getInfo(tabSelect)"
+          >
+            <i class="material-icons left"></i
+            >{{ "GENERAR_GRAFICA" | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </mat-sidenav>
+  <!--Fin menu creación Gráfica-->
+
+  <mat-sidenav-content  class="fondo-degrade-azul">
+    <div class="col s12 center">
+      <div style="height: 56px;">
+        <div class="float-right padding-4">
+          <a
+            (click)="createGraph()"
+            class="waves-effect waves-light btn back-gris-btn"
+          >
+            <i class="material-icons left">add</i
+            >{{ "CREAR_GRAFICA" | translate }}</a
+          >
+        </div>
+      </div>
+    </div>
+    <!-- tabs -->
+    <div class="style-box-tabs back-azul-oscuro">
+      <ng-container *ngIf="graficasAbiertas.length === 0">
+        <p class="font-blanca">{{ "SIN_GRAFICA" | translate }}</p>
+      </ng-container>
+      <mat-tab-group [(selectedIndex)]="tabSelect">
+        <mat-tab
+          *ngFor="let item of graficasAbiertas; let i = index"
+          (click)="changeTab(i)"
+        >
+          <ng-template mat-tab-label>
+            <div class="justific">
+              <p>
+                {{
+                  item.fieldCDK.nombreGrafica === ""
+                    ? "nueva_grafica_" + i
+                    : item.fieldCDK.nombreGrafica
+                }}
+              </p>
+              <a (click)="closeGraph(i)">
+                <mat-icon class="material-icons style-more1">close</mat-icon>
+              </a>
+            </div>
+          </ng-template>
+
+          <div
+            class="input-field col s12 m6 tamaño-upload  center-div"
+            *ngIf="
+              item.estadoCreacion === 'Creando' ||
+              item.estadoCreacion === 'Editando'
+            "
+          >
+            <input
+              name="nombre_grafica"
+              type="text"
+              [(ngModel)]="item.fieldCDK.nombreGrafica"
+              class="validate font-blanca"
+            />
+            <label for="nombre_grafica"
+              >{{ "NOMBRE_GRAFICA" | translate }}*</label
+            >
+          </div>
+          <div class="m-5 style_canva">
+            <div class=" card col-md-6 offset-md-3">
+              <canvas id="{{ item.fieldCDK.id }}"></canvas>
+            </div>
+          </div>
+          <mat-form-field class="example-full-width">
+            <textarea
+              [(ngModel)]="item.fieldCDK.descGrafico"
+              matInput
+              class="font-blanca"
+              placeholder="Deja una descripción de la grafica"
+              [disabled]="item.estadoCreacion === 'Creado'"
+            ></textarea>
+          </mat-form-field>
+          <div class="margin-top-9">
+            <button
+              *ngIf="item.estadoCreacion === 'Creando'"
+              (click)="saveGraph()"
+              class="waves-effect font-back-azul waves-light btn"
+              [disabled]="
+                enableButtonCreate(
+                  item.fieldCDK.descGrafico,
+                  item.fieldCDK.nombreGrafica
+                )
+              "
+            >
+              <i class="material-icons left"></i
+              >{{ "GUARDAR_GRAFICA" | translate }}
+            </button>
+          </div>
+          <div class="margin-top-9">
+            <button
+              *ngIf="item.estadoCreacion === 'Creado'"
+              (click)="editGraph(i, item.fieldCDK)"
+              class="waves-effect font-back-azul waves-light btn"
+            >
+              <i class="material-icons left"></i
+              >{{ "EDITAR_GRAFICA" | translate }}
+            </button>
+          </div>
+          <div class="margin-top-9">
+            <button
+              *ngIf="item.estadoCreacion === 'Editando'"
+              (click)="saveChangesGraph()"
+              class="waves-effect font-back-azul waves-light btn"
+              [disabled]="
+                disabledItems.botonGuardarCambios &&
+                graficasAbiertas[tabSelect].estadoCreacion !== 'Editando'
+              "
+            >
+              <i class="material-icons left"></i
+              >{{ "GUARDAR_CAMBIOS" | translate }}
+            </button>
+          </div>
+          <div class="margin-top-9">
+            <button
+              *ngIf="item.estadoCreacion === 'Editando'"
+              (click)="cancelEditGraph(i)"
+              class="waves-effect font-back-azul waves-light btn"
+            >
+              <i class="material-icons left"></i
+              >{{ "CANCELAR_CAMBIOS" | translate }}
+            </button>
+          </div>
+          <!--    <mat-tab label="First">-->
+        </mat-tab>
+      </mat-tab-group>
+
+      <div class="m-5 style_canva">
+        <div class="card  col-md-6 offset-md-3"></div>
+      </div>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

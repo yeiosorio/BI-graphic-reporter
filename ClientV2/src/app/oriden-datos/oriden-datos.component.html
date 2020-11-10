@@ -1,0 +1,325 @@
+<mat-sidenav-container class="box-container ">
+    <mat-sidenav #sidenav
+                 opened
+                 mode="side"
+                 class="back-azul-azul-oscuro ">
+        <div class="row  "
+             [ngClass]="expand">
+            <div class="col-s12 m2 back-azul-oscuro style-barr-top">
+                <p *ngIf="verEnMenu"
+                   id="label-area"
+                   class="font-blanca">{{'AREA_TRABAJO' | translate}}</p>
+                <a *ngIf="verEnMenu"
+                   (click)="cerrarPanel()">
+                    <i class="material-icons font-gris float-right">chevron_left</i>
+                </a>
+                <a *ngIf="!verEnMenu"
+                   (click)="abrirPanel()">
+                    <i class="material-icons font-gris float-right">chevron_right</i>
+                </a>
+            </div>
+            <div class="col-s12 m2 center back-azul-gris absolute">
+                <img *ngIf="verEnMenu"
+                     src="../../assets/img/1.png"
+                     alt=""
+                     class="circle tam-avatar margin-top-18">
+                <p *ngIf="verEnMenu"
+                   class="font-azul upperCase">{{usuario.nombre}}</p>
+
+            </div>
+
+
+            <div class="col-s12 m2 back-azul-azul-oscuro-oscuro margin-top-13em  padding-9 ">
+                <p *ngIf="verEnMenu"
+                   class="font-blanca style-p subrayado display-flex">{{'CLIENTES' | translate}}
+                    <a [routerLink]="['/proyecto']"
+                       class="font-blanca style_btn margin-left-9  ">
+                        <i class=" material-icons margin-left-5 tam-font-valor-sub font-blanca">add</i>
+                    </a>
+                </p>
+            </div>
+            <!-- seleccion de cliente -->
+            <div class="input-field col s12 sin_marginTop font-blanca ">
+
+                <mat-select [(ngModel)]="selectEmpresa" (selectionChange)="cambiaCliente()"
+                            name="cliente"
+                            id="cliente"
+                            class="border-gris">
+                    <mat-option *ngFor="let op of clientes"
+                                [value]="op.empresa_id">
+                        {{op.nombre}}
+                    </mat-option>
+                </mat-select>
+
+
+            </div>
+
+            <div class="col-s12 m2 back-azul-azul-oscuro-oscuro margin-top-80 padding-9 ">
+                <p *ngIf="verEnMenu"
+                   class="font-blanca ">{{'INFO-ESQUEMA' | translate}}</p>
+            </div>
+            <div class="padding-9 style-box-scroll-externo">
+                <ul class="collapsible menu-collapsible-padre">
+                    <!-- origenes de datos -->
+                    <li [ngClass]="isDisableOrigen">
+                        <div class="collapsible-header menu-collapsible">
+                            <div [ngClass]="IcondesableOri"></div>
+                            <div class="margin-top-menos-10">
+                                <p class="font-blanca">{{'ORIGEN-DATOS' | translate}}</p>
+                            </div>
+                        </div>
+                        <div class="collapsible-body active">
+                            <div class="container-columns ">
+
+                                <div cdkDropList
+                                     #datosList="cdkDropList"
+                                     [cdkDropListData]="tablas"
+                                     [cdkDropListConnectedTo]="[]"
+                                     class="list-origen-datos"
+                                     (cdkDropListDropped)="dropOrigen($event)">
+                                    <div class="list-box-origen-datos"
+                                         *ngFor="let item of tablas; let i = index"
+                                         cdkDrag>
+                                        <a class="font-blanca"
+                                           (click)="abrirTabla(i)">{{item.nombre}}</a>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </li>
+                    <!-- graficos -->
+                    <li [ngClass]="isDisableGraph">
+                        <div class="collapsible-header menu-collapsible">
+                            <div [ngClass]="IcondesableGra"></div>
+                            <div class="margin-top-menos-10">
+                                <p class="font-blanca display-flex tam-letra-14 ">{{'GRAFICOS' | translate}}
+                                    <a [routerLink]="['/graficos']"
+                                       class="font-blanca style_btn ">
+                                        <i class=" material-icons tam-font-valor-sub font-blanca">add</i>
+                                    </a>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="collapsible-body">
+                            <div class="container-columns ">
+                                <!-- (cdkDropListDropped)="dropGraficos($event)" -->
+                                <div cdkDropList
+                                     #graficasList="cdkDropList"
+                                     [cdkDropListData]="graficas"
+                                     [cdkDropListConnectedTo]="[]"
+                                     class="list-origen-datos">
+                                    <div class="list-box-origen-datos"
+                                         *ngFor="let item of graficas"
+                                         cdkDrag>{{item.nombre}}</div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </li>
+                    <!-- espacios de trabajo -->
+                    <li [ngClass]="isDisableSpace">
+                        <div class="collapsible-header menu-collapsible">
+
+                            <div [ngClass]="IcondesableEsp"></div>
+                            <div class="margin-top-menos-10">
+                                <p class="font-blanca display-flex tam-letra-14 ">{{'ESPACIOS-TRABAJO' | translate}}
+                                    <a [routerLink]="['/espTrabajo']"
+                                       class="font-blanca style_btn ">
+                                        <i class=" material-icons tam-font-valor-sub font-blanca">add</i>
+                                    </a>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="collapsible-body">
+                            <div class="container-columns ">
+                                <div cdkDropList
+                                     #espaciosList="cdkDropList"
+                                     [cdkDropListData]="espacios"
+                                     [cdkDropListConnectedTo]="[]"
+                                     class="list-origen-datos"
+                                     (cdkDropListDropped)="dropEspacios($event)">
+                                    <div class="list-box-origen-datos"
+                                         *ngFor="let item of espacios"
+                                         cdkDrag>{{item.nombre}}</div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </li>
+
+                </ul>
+
+
+
+            </div>
+
+
+            <!-- footer -->
+            <div class="col-s12 m2 style-barr-footer">
+                <a *ngIf="verEnMenu"
+                   (click)="cerrarPanel()">
+                    <i class="material-icons font-gris ">chevron_left</i>
+                </a>
+            </div>
+        </div>
+    </mat-sidenav>
+
+
+    <!-- contenido -->
+    <mat-sidenav-content [ngClass]="margiLeftDinamic">
+        <div class="col s2">
+            <mat-sidenav-container class="box-container2 ">
+                <!-- contenio panel interno -->
+                <mat-sidenav #sidenav3
+                             mode="side"
+                             [(opened)]="opened"
+                             class="back-azul-azul-claro  tam-box-interna"
+                             (opened)="events.push('open!')"
+                             (closed)="events.push('close!')">
+
+                    <div class="row">
+                        <div class="col-s12 m2  back-azul-azul-oscuro style-box-edit ">
+
+
+                        </div>
+                    </div>
+
+
+
+                </mat-sidenav>
+
+
+                <!-- contenido -->
+                <mat-sidenav-content [(ngModel)]="opened"
+                                     class="fondo-degrade-azul">
+                    <div class="col s12 center">
+                        <div style="height: 80px;">
+                            <div class="float-right padding-4">
+                                <a (click)="nuevaTabla()"
+                                   class="waves-effect waves-light btn back-gris-btn">
+                                    <i class="material-icons left">add</i>{{'CREAR_TABLA' | translate}}</a>
+                            </div>
+                        </div>
+                        <!-- tabs -->
+                        <div class="style-box-tabs back-azul-oscuro">
+                            <ng-container *ngIf="(asyncTabs ) === null || (asyncTabs.length ) ==0">
+                                <p class="font-blanca">{{'SIN_TABLA' | translate}}</p>
+                            </ng-container>
+
+                            <mat-tab-group [selectedIndex]="selected.value"
+                                           (selectedIndexChange)="cambioTab($event)">
+                                <mat-tab *ngFor="let tab of asyncTabs; let i = index ">
+                                    <ng-template id="tablas"
+                                                 mat-tab-label>{{tab.nombre}}</ng-template>
+                                    <div *ngIf="!tab.creando" style="height: 20px;"></div>
+                                    <div *ngIf="tab.creando" class="row" style="margin-bottom: 0px;">
+                                        <div class="file-field input-field col s12 m6 l4 tamaño-upload center-div">
+                                            <div class="btn font-back-azul">
+                                                <span>{{'IMPORTAR' | translate}}</span>
+                                                <input type="file"
+                                                       id="selectFile"
+                                                       name="selectFile"
+                                                       class="font-blanca"
+                                                       (change)="fileUploads($event, i)">
+                                            </div>
+                                            <div class="file-path-wrapper">
+                                                <input class="file-path validate"
+                                                       type="text">
+                                            </div>
+                                        </div>
+                                        <div *ngIf="tab.creando" class="input-field col s12 m6 tamaño-upload  center-div">
+                                            <input name="nombre_tabla"
+                                                   type="text"
+                                                   [(ngModel)]="nameTable"
+                                                   (change)="changeNomTable(i)"
+                                                   class="validate font-blanca">
+                                            <label for="nombre_tabla">{{'NOMBRE_DE_TABLA' | translate}}*</label>
+                                        </div>
+                                    </div>
+
+                                    <div class="scroll-x">
+
+                                        <table mat-table
+                                               [dataSource]="dataSource"
+                                               class="mat-elevation-z8 striped  responsive-table">
+                                            <ng-container *ngFor="let disCol of header; let colIndex = index"
+                                                          matColumnDef="{{disCol}}">
+                                                <mat-header-cell *matHeaderCellDef>
+                                                    <input *ngIf="tab.creando"
+                                                           class="check-head"
+                                                           checked="checked"
+                                                           type="checkbox"
+                                                           (change)="seleccion(colIndex)" />{{disCol}} </mat-header-cell>
+                                                <mat-cell *matCellDef="let element "> {{element[colIndex]}}
+                                                </mat-cell>
+                                            </ng-container>
+
+                                            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                                            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+
+
+                                        </table>
+                                    </div>
+                                    <mat-paginator [pageSizeOptions]="[5, 10, 20]"
+                                                   showFirstLastButtons></mat-paginator>
+
+                                    <!-- Espacio para mostrar informacion y validacion del archivo csv cargado -->
+                                    <div *ngIf="typeExtension" style="color: #c3c3c3; font-size: 16px; padding: 10px;">
+                                        <i class="material-icons" style="color: aliceblue; margin-left: -33px; position: absolute;">info</i>&nbsp;
+                                        Lo sentimos el formato del archivo que va a cargar aun no es permitido!.
+                                    </div>
+                                    <div *ngIf="loadingCsv" style="color: #c3c3c3; font-size: 16px; padding: 10px;">
+                                        Cargando...
+                                    </div>
+                                    <div class="row" *ngIf="tamano != ''" style="margin-bottom: 0px; margin-top: 10px;">
+                                        <div style="">
+                                            <label style="color: #40c7ff; font-size: 18px;">Resumen de la carga:</label> 
+                                        </div>
+                                        <div class="col s12 m6">
+                                            <div style="float: right;">
+                                                <label style="color: #c3c3c3; font-size: 16px;">Tamaño del archivo: </label><label style="color: #40c7ff; font-size: 14px;"> {{tamano}} </label> 
+                                            </div>
+                                        </div>
+                                        <div class="col s12 m6">
+                                            <div style="float: left;">
+                                                <label style="color: #c3c3c3; font-size: 16px;">Filas totales: </label><label style="color: #40c7ff; font-size: 14px;"> {{totalfilas}} </label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div *ngIf="duplicateColunms != '' " class="duplicateColunms" style="padding: 6px;">
+                                        
+                                        <p style="color: #c3c3c3; font-size: 16px;">
+                                            <i class="material-icons" style="color: aliceblue; margin-left: -33px; position: absolute;">info</i>&nbsp;
+                                            Las siguientes columnas estan duplicadas, por favor revise el archivo e intente cargarlo de nuevo!.
+                                        </p>
+                                        <label *ngFor="let duplicateColunm of duplicateColunms" style="color: #40c7ff; font-size: 14px; padding: 10px;">
+                                            {{duplicateColunm | uppercase }},
+                                        </label>
+                                    </div>
+                                    
+                                   
+
+                                    <div class="margin-top-9">
+                                        <a *ngIf="tab.creando"
+                                           (click)="guardarTabla(i)"
+                                           class="waves-effect font-back-azul waves-light btn">
+                                            <i class="material-icons left"></i>{{'GUARDAR_TABLA' | translate}}</a>
+                                    </div>
+
+                                </mat-tab>
+                            </mat-tab-group>
+
+                        </div>
+
+
+
+
+                    </div>
+                </mat-sidenav-content>
+            </mat-sidenav-container>
+        </div>
+    </mat-sidenav-content>
+</mat-sidenav-container>

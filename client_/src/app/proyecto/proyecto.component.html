@@ -1,0 +1,180 @@
+<mat-sidenav-container class="box-container ">
+    <mat-sidenav #sidenav
+                 opened
+                 mode="side"
+                 class="back-azul-azul-oscuro ">
+        <div class="row  "
+             [ngClass]="expand">
+            <div class="col-s12 m2 back-azul-oscuro style-barr-top">
+                <p *ngIf="verEnMenu"
+                   id="label-area"
+                   class="font-blanca">{{'AREA_TRABAJO' | translate}}</p>
+                <a *ngIf="verEnMenu"
+                   (click)="cerrarPanel()"><i class="material-icons font-gris float-right">chevron_left</i></a>
+                <a *ngIf="!verEnMenu"
+                   (click)="abrirPanel()"><i class="material-icons font-gris float-right">chevron_right</i></a>
+            </div>
+            <div class="col-s12 m2 center back-azul-gris absolute">
+                <img *ngIf="verEnMenu"
+                     src="../../assets/img/1.png"
+                     alt=""
+                     class="circle tam-avatar margin-top-18">
+                <p *ngIf="verEnMenu"
+                   class="font-azul upperCase">{{usuario.nombre}}</p>
+
+            </div>
+            <div class="col-s12 m2 back-azul-azul-oscuro-oscuro margin-top-14em center">
+                <i *ngIf="verEnMenu"
+                   class="margin-vertical material-icons font-blanca tam-letra-50">done</i>
+                <p *ngIf="verEnMenu"
+                   class="font-blanca">{{'INFO_PRIMER_CLIENTE' | translate}}</p><br>
+
+            </div>
+            <!-- footer -->
+            <div class="col-s12 m2 style-barr-footer">
+                <a *ngIf="verEnMenu"
+                   (click)="cerrarPanel()"><i class="material-icons font-gris ">chevron_left</i></a>
+            </div>
+        </div>
+    </mat-sidenav>
+
+
+    <!-- contenido -->
+    <mat-sidenav-content [ngClass]="margiLeftDinamic">
+        <div class="col s2">
+            <mat-sidenav-container class="box-container2 ">
+                <mat-sidenav #sidenav2
+                             mode="side"
+                             [(opened)]="opened"
+                             (opened)="events.push('open!')"
+                             (closed)="events.push('close!')">
+
+                    <div class="row  "
+                         [ngClass]="expand2">
+                        <div class="col-s12 m2 center back-azul-gris absolute">
+                            <img src="../../assets/img/1.png"
+                                 alt=""
+                                 class="circle tam-avatar margin-top-18">
+                            <p>
+                                {{usuario.nombre}}</p>
+
+                        </div>
+
+                    </div>
+                </mat-sidenav>
+
+
+                <!-- contenido -->
+                <mat-sidenav-content [(ngModel)]="opened"
+                                     class="fondo-degrade-azul">
+                    <div class="col s12 center">
+                        <!-- para abrir el panel interior -->
+                        <p><button mat-button
+                                    (click)="sidenav2.toggle()">sidenav.toggle()</button></p>
+                        <h3 class="font-blanca"> {{'BIENVENIDO' | translate}}</h3>
+                        <h5 class="font-blanca">{{'CREAR_PRIMER_PROYECTO' |translate}}</h5>
+
+                        <div class="col s12 center style-box-center fondo-degrade-azul-oscuro">
+                            <br>
+                            <div id="iconos"
+                                 class=" center-div"
+                                 width="1"
+                                 height="1"></div>
+                            <p class="font-blanca">{{'MANEJAR_MULTIPLE_CLIENTES' | translate}}</p>
+                            <div class="row">
+                                <form #clienteForm="ngForm"
+                                      class="padding-60"
+                                      (ngSubmit)="crearCliente(clienteForm)">
+                                    <div class="">
+                                        <div class="input-field col s12 m6">
+                                            <input name="nombre"
+                                                   #nombre="ngModel"
+                                                   [(ngModel)]="proyectoService.selecProyecto.nombre"
+                                                   type="text"
+                                                   class="validate font-blanca">
+                                            <label for="nombre">{{'NOMBRE_CLIENTE' | translate}}*</label>
+                                        </div>
+                                        <div class="input-field col s12 m6">
+                                            <input name="nit"
+                                                   #nit="ngModel"
+                                                   [(ngModel)]="proyectoService.selecProyecto.nit"
+                                                   type="text"
+                                                   class="validate font-blanca">
+                                            <label for="nit">{{'NIT' | translate}}*</label>
+                                        </div>
+                                        <div class="input-field col s12 m4">
+                                            <input name="email"
+                                                   #email="ngModel"
+                                                   [(ngModel)]="proyectoService.selecProyecto.email"
+                                                   type="text"
+                                                   class="validate font-blanca">
+                                            <label for="email">{{'CORREO_CLIENTE' | translate}}*</label>
+                                        </div>
+                                        <div class="input-field col s12 m4">
+                                            <input name="telefono"
+                                                   #telefono="ngModel"
+                                                   [(ngModel)]="proyectoService.selecProyecto.telefono"
+                                                   type="text"
+                                                   class="validate font-blanca">
+                                            <label for="telefono">{{'TELEFONO' | translate}}*</label>
+                                        </div>
+                                        <div class="input-field col s12 m4">
+                                            <input name="direccion"
+                                                   #direccion="ngModel"
+                                                   [(ngModel)]="proyectoService.selecProyecto.direccion"
+                                                   type="text"
+                                                   class="validate font-blanca">
+                                            <label for="direccion">{{'DIRECCION' | translate}}*</label>
+                                        </div>
+                                        <div class="input-field col s12 m6">
+                                            <input name="ciudad"
+                                                   #ciudad="ngModel"
+                                                   [(ngModel)]="proyectoService.selecProyecto.ciudad"
+                                                   type="text"
+                                                   class="validate font-blanca">
+                                            <label for="ciudad">{{'CIUDAD' | translate}}*</label>
+                                        </div>
+                                        <div class="input-field col s12 m6">
+                                            <input name="departamento"
+                                                   #departamento="ngModel"
+                                                   [(ngModel)]="proyectoService.selecProyecto.departamento"
+                                                   type="text"
+                                                   class="validate font-blanca">
+                                            <label for="departamento">{{'DEPARTAMENTO' | translate}}*</label>
+                                        </div>
+                                        <button class="waves-effect waves-light btn back-azul-cielo tam-200">{{'CREAR-CLIENTE' | translate}}</button>
+
+                                    </div>
+                                    <!-- <div class="row style-box-white-margin-top">
+                                        <div class="input-field col s12">
+                                            <input name="nomb_proyecto"
+                                                   #nomb_proyecto="ngModel"
+                                                   [(ngModel)]="proyectoService.selecProyecto.nomb_proyecto"
+                                                   type="text"
+                                                   class="validate font-blanca">
+                                            <label for="first_name">{{'NOMBRE-PROYECTO' | translate}}*</label>
+                                        </div>
+                                        <div class="input-field col s12">
+                                            <mat-form-field class="full-width font-blanca">
+                                                <label for="first_name">{{'DESCRIP-PROYECTO' | translate}}*</label>
+                                                <textarea matInput
+                                                          name="desc_proyecto"
+                                                          #desc_proyecto="ngModel"
+                                                          [(ngModel)]="proyectoService.selecProyecto.desc_proyecto"
+                                                          class="font-blanca"></textarea>
+
+                                            </mat-form-field>
+                                        </div>
+
+                                    </div> -->
+                                </form>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </mat-sidenav-content>
+            </mat-sidenav-container>
+        </div>
+    </mat-sidenav-content>
+</mat-sidenav-container>

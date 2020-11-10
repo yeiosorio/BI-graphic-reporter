@@ -1,0 +1,187 @@
+<mat-sidenav-container class="box-container ">
+  <!-- contenido -->
+  <mat-sidenav-content class="fondo-degrade-azul">
+    <div class="col s12 center">
+      <div style="height: 80px;">
+        <div class="float-right padding-4">
+          <a
+            (click)="nuevaTabla()"
+            class="waves-effect waves-light btn back-gris-btn"
+          >
+            <i class="material-icons left">add</i
+            >{{ "CREAR_TABLA" | translate }}</a
+          >
+        </div>
+      </div>
+      <!-- tabs -->
+      <div class="style-box-tabs back-azul-oscuro">
+        <ng-container *ngIf="asyncTabs === null || asyncTabs.length == 0">
+          <p class="font-blanca">{{ "SIN_TABLA" | translate }}</p>
+        </ng-container>
+
+        <mat-tab-group
+          [selectedIndex]="selected.value"
+          (selectedIndexChange)="cambioTab($event)"
+        >
+          <mat-tab *ngFor="let tab of asyncTabs; let i = index">
+            <ng-template id="tablas" mat-tab-label>{{
+              tab.nombre
+            }}</ng-template>
+            <div *ngIf="!tab.creando" style="height: 20px;"></div>
+            <div *ngIf="tab.creando" class="row" style="margin-bottom: 0px;">
+              <div
+                class="file-field input-field col s12 m6 l4 tamaño-upload center-div"
+              >
+                <div class="btn font-back-azul">
+                  <span>{{ "IMPORTAR" | translate }}</span>
+                  <input
+                    type="file"
+                    id="selectFile"
+                    name="selectFile"
+                    class="font-blanca"
+                    (change)="fileUploads($event, i)"
+                  />
+                </div>
+                <div class="file-path-wrapper">
+                  <input class="file-path validate" type="text" />
+                </div>
+              </div>
+              <div
+                *ngIf="tab.creando"
+                class="input-field col s12 m6 tamaño-upload  center-div"
+              >
+                <input
+                  name="nombre_tabla"
+                  type="text"
+                  [(ngModel)]="nameTable"
+                  (change)="changeNomTable(i)"
+                  class="validate font-blanca"
+                />
+                <label for="nombre_tabla"
+                  >{{ "NOMBRE_DE_TABLA" | translate }}*</label
+                >
+              </div>
+            </div>
+
+            <div class="scroll-x">
+              <table
+                mat-table
+                [dataSource]="dataSource"
+                class="mat-elevation-z8 striped  responsive-table"
+              >
+                <ng-container
+                  *ngFor="let disCol of header; let colIndex = index"
+                  matColumnDef="{{ disCol }}"
+                >
+                  <mat-header-cell *matHeaderCellDef>
+                    <input
+                      *ngIf="tab.creando"
+                      class="check-head"
+                      checked="checked"
+                      type="checkbox"
+                      (change)="seleccion(colIndex)"
+                    />{{ disCol }}
+                  </mat-header-cell>
+                  <mat-cell *matCellDef="let element">
+                    {{ element[colIndex] }}
+                  </mat-cell>
+                </ng-container>
+
+                <mat-header-row
+                  *matHeaderRowDef="displayedColumns"
+                ></mat-header-row>
+                <mat-row
+                  *matRowDef="let row; columns: displayedColumns"
+                ></mat-row>
+              </table>
+            </div>
+            <mat-paginator
+              [pageSizeOptions]="[5, 10, 20]"
+              showFirstLastButtons
+            ></mat-paginator>
+
+            <!-- Espacio para mostrar informacion y validacion del archivo csv cargado -->
+            <div
+              *ngIf="typeExtension"
+              style="color: #c3c3c3; font-size: 16px; padding: 10px;"
+            >
+              <i
+                class="material-icons"
+                style="color: aliceblue; margin-left: -33px; position: absolute;"
+                >info</i
+              >&nbsp; Lo sentimos el formato del archivo que va a cargar aun no
+              es permitido!.
+            </div>
+            <div
+              *ngIf="loadingCsv"
+              style="color: #c3c3c3; font-size: 16px; padding: 10px;"
+            >
+              Cargando...
+            </div>
+            <div
+              class="row"
+              *ngIf="tamano != ''"
+              style="margin-bottom: 0px; margin-top: 10px;"
+            >
+              <div style="">
+                <label style="color: #40c7ff; font-size: 18px;"
+                  >Resumen de la carga:</label
+                >
+              </div>
+              <div class="col s12 m6">
+                <div style="float: right;">
+                  <label style="color: #c3c3c3; font-size: 16px;"
+                    >Tamaño del archivo: </label
+                  ><label style="color: #40c7ff; font-size: 14px;">
+                    {{ tamano }}
+                  </label>
+                </div>
+              </div>
+              <div class="col s12 m6">
+                <div style="float: left;">
+                  <label style="color: #c3c3c3; font-size: 16px;"
+                    >Filas totales: </label
+                  ><label style="color: #40c7ff; font-size: 14px;">
+                    {{ totalfilas }}
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div
+              *ngIf="duplicateColunms != ''"
+              class="duplicateColunms"
+              style="padding: 6px;"
+            >
+              <p style="color: #c3c3c3; font-size: 16px;">
+                <i
+                  class="material-icons"
+                  style="color: aliceblue; margin-left: -33px; position: absolute;"
+                  >info</i
+                >&nbsp; Las siguientes columnas estan duplicadas, por favor
+                revise el archivo e intente cargarlo de nuevo!.
+              </p>
+              <label
+                *ngFor="let duplicateColunm of duplicateColunms"
+                style="color: #40c7ff; font-size: 14px; padding: 10px;"
+              >
+                {{ duplicateColunm | uppercase }},
+              </label>
+            </div>
+
+            <div class="margin-top-9">
+              <a
+                *ngIf="tab.creando"
+                (click)="guardarTabla(i)"
+                class="waves-effect font-back-azul waves-light btn"
+              >
+                <i class="material-icons left"></i
+                >{{ "GUARDAR_TABLA" | translate }}</a
+              >
+            </div>
+          </mat-tab>
+        </mat-tab-group>
+      </div>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>
