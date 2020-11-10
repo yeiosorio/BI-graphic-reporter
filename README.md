@@ -1,6 +1,3 @@
-__BI - GL__
-Seridor creado en NodeJs + Express para una configuracion mas ligera 
-del lado del cliente se instala Anular 7 + materilize 
 
 # server - node
 1. npm init
